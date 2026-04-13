@@ -8,19 +8,20 @@ namespace EuroLeaguesScore
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            string? connectionString = builder.Configuration.GetConnectionString("SqlDevConnection") ?? throw new InvalidOperationException("Connection string 'SqlDevConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.AddDefaultIdentity<IdentityUser>(options => {
+                ConfigureIdentity(options, builder);
+                }).AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
-            var app = builder.Build();
+            WebApplication app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -39,6 +40,7 @@ namespace EuroLeaguesScore
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
@@ -47,6 +49,26 @@ namespace EuroLeaguesScore
             app.MapRazorPages();
 
             app.Run();
+        }
+
+        private static void ConfigureIdentity(IdentityOptions options, WebApplicationBuilder builder)
+        {
+            options.SignIn.RequireConfirmedAccount = builder
+                .Configuration.GetValue<bool>("IdentitySettings:SignIn:RequireConfirmedAccount");
+
+            options.User.RequireUniqueEmail = builder
+                .Configuration.GetValue<bool>("IdentitySettings:User:RequireUniqueEmail");
+
+            options.Password.RequiredLength = builder
+                .Configuration.GetValue<int>("IdentitySettings:Password:RequiredLength");
+            options.Password.RequireDigit = builder
+                .Configuration.GetValue<bool>("IdentitySettings:Password:RequireDigit");
+            options.Password.RequireNonAlphanumeric = builder
+                .Configuration.GetValue<bool>("IdentitySettings:Password:RequireNonAlphanumeric");
+            options.Password.RequireUppercase = builder
+                .Configuration.GetValue<bool>("IdentitySettings:Password:RequireUppercase");
+            options.Password.RequireLowercase = builder
+                .Configuration.GetValue<bool>("IdentitySettings:Password:RequireLowercase");
         }
     }
 }
