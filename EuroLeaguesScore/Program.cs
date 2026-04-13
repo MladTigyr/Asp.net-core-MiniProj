@@ -1,9 +1,9 @@
-using EuroLeaguesScore.Data;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-
 namespace EuroLeaguesScore
 {
+    using EuroLeaguesScore.Data;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
+
     public class Program
     {
         public static void Main(string[] args)
@@ -12,13 +12,13 @@ namespace EuroLeaguesScore
 
             // Add services to the container.
             string? connectionString = builder.Configuration.GetConnectionString("SqlDevConnection") ?? throw new InvalidOperationException("Connection string 'SqlDevConnection' not found.");
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            builder.Services.AddDbContext<EuroLeaguesScoreDbContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => {
                 ConfigureIdentity(options, builder);
-                }).AddEntityFrameworkStores<ApplicationDbContext>();
+                }).AddEntityFrameworkStores<EuroLeaguesScoreDbContext>();
             builder.Services.AddControllersWithViews();
 
             WebApplication app = builder.Build();
