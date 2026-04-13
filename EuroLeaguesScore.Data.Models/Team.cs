@@ -32,10 +32,10 @@
         [ForeignKey(nameof(LeagueId))]
         public virtual League League { get; set; } = null!;
 
-        public int ManagerId { get; set; }
+        public int? ManagerId { get; set; }
 
         [ForeignKey(nameof(ManagerId))]
-        public virtual Manager Manager { get; set; } = null!;
+        public virtual Manager? Manager { get; set; }
 
         public virtual ICollection<Player> Players { get; set; } 
             = new HashSet<Player>();
