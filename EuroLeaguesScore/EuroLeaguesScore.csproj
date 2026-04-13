@@ -17,4 +17,9 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.23" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EuroLeaguesScore.Data\EuroLeaguesScore.Data.csproj" />
+    <ProjectReference Include="..\EuroLeaguesScore.ViewModels\EuroLeaguesScore.ViewModels.csproj" />
+  </ItemGroup>
+
 </Project>
