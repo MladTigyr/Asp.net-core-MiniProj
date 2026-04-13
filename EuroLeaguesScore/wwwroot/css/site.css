@@ -1,22 +1,129 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+body.football-body {
+    background: linear-gradient(to bottom, #0f172a, #111827, #1f2937);
+    color: #f8fafc;
+    min-height: 100vh;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
+.football-navbar {
+    background: linear-gradient(90deg, #0b1220, #111827);
+    border-bottom: 2px solid #22c55e;
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
 }
 
-body {
-  margin-bottom: 60px;
+.football-brand {
+    color: #22c55e !important;
+    font-size: 1.4rem;
+    letter-spacing: 0.5px;
+}
+
+.football-link {
+    color: #e5e7eb !important;
+    font-weight: 500;
+    margin-right: 0.5rem;
+    transition: 0.2s ease-in-out;
+}
+
+    .football-link:hover {
+        color: #22c55e !important;
+        transform: translateY(-1px);
+    }
+
+.football-toggler {
+    background-color: #f8fafc;
+    border-radius: 8px;
+}
+
+.football-hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.65)), url('/images/football-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 4rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    margin-bottom: 2rem;
+}
+
+.hero-content h1 {
+    color: #ffffff;
+}
+
+.hero-content p {
+    color: #d1d5db;
+    font-size: 1.1rem;
+}
+
+.football-main-content {
+    min-height: 70vh;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 2rem;
+    border-radius: 18px;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+
+.football-footer {
+    background: #0b1220;
+    color: #9ca3af;
+    border-top: 2px solid #22c55e;
+}
+
+.football-footer-link {
+    color: #22c55e;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+    .football-footer-link:hover {
+        color: #86efac;
+    }
+
+.btn-primary {
+    background-color: #16a34a !important;
+    border-color: #16a34a !important;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+    .btn-primary:hover {
+        background-color: #15803d !important;
+        border-color: #15803d !important;
+    }
+
+.form-control {
+    border-radius: 10px;
+    border: 1px solid #374151;
+    background-color: #111827;
+    color: #f9fafb;
+}
+
+    .form-control:focus {
+        border-color: #22c55e;
+        box-shadow: 0 0 0 0.2rem rgba(34, 197, 94, 0.2);
+        background-color: #111827;
+        color: #fff;
+    }
+
+.form-floating > label {
+    color: #9ca3af;
+}
+
+.card,
+.table,
+.list-group-item {
+    border-radius: 14px;
+}
+
+a {
+    text-decoration: none;
 }
