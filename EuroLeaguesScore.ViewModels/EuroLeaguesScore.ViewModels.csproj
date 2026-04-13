@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EuroLeaguesScore.Data.Models\EuroLeaguesScore.Data.Models.csproj" />
+    <ProjectReference Include="..\EuroLeaguesScore.GCommon\EuroLeaguesScore.GCommon.csproj" />
+  </ItemGroup>
+
 </Project>
