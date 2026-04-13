@@ -2,6 +2,8 @@
 {
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+
+    using Microsoft.AspNetCore.Identity;
     using static GCommon.EntityValidations;
 
     public class Manager
@@ -22,5 +24,10 @@
 
         public virtual ICollection<Player> Players { get; set; } 
                 = new HashSet<Player>();
+
+        [Required]
+        public string UserId { get; set; } = null!;
+
+        public virtual IdentityUser User { get; set; } = null!;
     }
 }
