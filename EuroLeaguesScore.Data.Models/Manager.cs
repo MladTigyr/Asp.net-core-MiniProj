@@ -28,6 +28,7 @@
         [Required]
         public string UserId { get; set; } = null!;
 
+        [ForeignKey(nameof(UserId))]
         public virtual IdentityUser User { get; set; } = null!;
     }
 }
