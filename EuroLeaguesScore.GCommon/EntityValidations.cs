@@ -23,5 +23,9 @@
         //ManagerValidations
         public const int ManagerNameMinLength = 3;
         public const int ManagerNameMaxLength = 100;
+
+        //Wins/Losses/Draws Validations
+        public const int MinWinsLossesDraws = 0;
+        public const int MaxWinsLossesDraws = int.MaxValue;
     }
 }
