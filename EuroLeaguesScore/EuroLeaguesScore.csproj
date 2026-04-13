@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EuroLeaguesScore.Data.Models\EuroLeaguesScore.Data.Models.csproj" />
     <ProjectReference Include="..\EuroLeaguesScore.Data\EuroLeaguesScore.Data.csproj" />
     <ProjectReference Include="..\EuroLeaguesScore.ViewModels\EuroLeaguesScore.ViewModels.csproj" />
   </ItemGroup>
