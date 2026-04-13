@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using EuroLeaguesScore.Models;
+using EuroLeaguesScore.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EuroLeaguesScore.Controllers
