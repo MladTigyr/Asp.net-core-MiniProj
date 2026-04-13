@@ -1,4 +1,4 @@
-namespace EuroLeaguesScore.Models
+namespace EuroLeaguesScore.ViewModels
 {
     public class ErrorViewModel
     {
