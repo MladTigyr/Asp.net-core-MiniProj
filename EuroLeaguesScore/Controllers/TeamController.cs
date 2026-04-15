@@ -7,6 +7,7 @@
     using EuroLeaguesScore.ViewModels.Team;
     using EuroLeaguesScore.Data.Models;
     using EuroLeaguesScore.ViewModels.Player;
+    using static GCommon.ViewModelsMessages;
 
     public class TeamController : BaseController
     {
@@ -124,6 +125,155 @@
             };
 
             return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest();
+            }
+
+            Team? team = dbContext.Teams
+                .FirstOrDefault(t => t.Id == id);
+
+            if (team == null)
+            {
+                return NotFound();
+            }
+
+            IEnumerable<Manager> managers = dbContext.Managers
+                    .AsNoTracking()
+                    .Where(m => !dbContext.Teams.Any(t => t.ManagerId == m.Id && t.Id != team.Id))
+                    .OrderBy(m => m.Name)
+                    .ToArray();
+
+            EditTeamInputModel model = new EditTeamInputModel
+            {
+                Id = id,
+                Name = team.Name,
+                Country = team.Country,
+                City = team.City,
+                LeagueId = team.LeagueId,
+                ManagerId = team.ManagerId,
+                Wins = team.Wins,
+                Losses = team.Losses,
+                Draws = team.Draws,
+                Managers = managers,
+                Leagues = GetLeagues()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(int id, EditTeamInputModel model)
+        {
+            if (id <= 0)
+            {
+                return BadRequest();
+            }
+
+            IEnumerable<Manager> managers = dbContext.Managers
+                    .AsNoTracking()
+                    .Where(m => !dbContext.Teams.Any(t => t.ManagerId == m.Id && t.Id != id))
+                    .OrderBy(m => m.Name)
+                    .ToArray();
+
+
+            model.Managers = managers;
+            model.Leagues = GetLeagues();
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            Team? team = dbContext.Teams
+                .FirstOrDefault(t => t.Id == id);
+
+            if (team == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                team.Name = model.Name;
+                team.City = model.City;
+                team.Country = model.Country;
+                team.Wins = model.Wins;
+                team.Draws = model.Draws;
+                team.Losses = model.Losses;
+                team.LeagueId = model.LeagueId;
+                team.ManagerId = model.ManagerId;
+
+                dbContext.SaveChanges();
+
+                return RedirectToAction(nameof(All));
+            }
+            catch
+            {
+                ModelState.AddModelError(string.Empty, "An error occured while editing this team. Please try again later");
+
+                return View(model);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest();
+            }
+
+            Team? team = dbContext.Teams
+                .FirstOrDefault(t => t.Id == id);
+
+            if (team == null)
+            {
+                return NotFound();
+            }
+
+            DetailsTeamInputModel model = new DetailsTeamInputModel
+            {
+                Id = team.Id,
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(int id, DetailsTeamInputModel model)
+        {
+            if (id <= 0)
+            {
+                return BadRequest();
+            }
+
+            Team? team = dbContext.Teams
+                .FirstOrDefault(t => t.Id == id);
+
+            if (team == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                dbContext.Teams.Remove(team);
+                dbContext.SaveChanges();
+
+                return RedirectToAction(nameof(All));
+            }
+            catch
+            {
+                ModelState.AddModelError(string.Empty, DeleteError);
+
+                return RedirectToAction(nameof(All));
+            }
         }
 
         private IEnumerable<League> GetLeagues()
