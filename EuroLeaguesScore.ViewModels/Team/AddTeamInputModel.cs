@@ -1,8 +1,11 @@
 ﻿namespace EuroLeaguesScore.ViewModels.Team
 {
     using EuroLeaguesScore.Data.Models;
+    using Microsoft.Extensions.Logging;
     using System.ComponentModel.DataAnnotations;
+
     using static GCommon.EntityValidations;
+    using static GCommon.ViewModelsMessages;
 
     public class AddTeamInputModel
     {
@@ -34,15 +37,15 @@
             new HashSet<League>();
 
         [Required]
-        [Range(MinWinsLossesDraws, MaxWinsLossesDraws)]
+        [Range(MinWinsLossesDraws, MaxWinsLossesDraws, ErrorMessage = WinsLossesDrawsMessage)]
         public int Wins { get; set; }
 
         [Required]
-        [Range(MinWinsLossesDraws, MaxWinsLossesDraws)]
+        [Range(MinWinsLossesDraws, MaxWinsLossesDraws, ErrorMessage = WinsLossesDrawsMessage)]
         public int Losses { get; set; }
 
         [Required]
-        [Range(MinWinsLossesDraws, MaxWinsLossesDraws)]
+        [Range(MinWinsLossesDraws, MaxWinsLossesDraws, ErrorMessage = WinsLossesDrawsMessage)]
         public int Draws { get; set; }
     }
 }
