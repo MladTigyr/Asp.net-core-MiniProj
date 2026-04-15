@@ -1,7 +1,7 @@
-﻿@model CreateTeamInputModel
+﻿@model AddTeamInputModel
 
 @{
-    ViewData["Title"] = "Create Team";
+    ViewData["Title"] = "Add Team";
 }
 
 <div class="row justify-content-center">
@@ -10,14 +10,14 @@
             <div class="card-body p-4 p-md-5">
                 <div class="text-center mb-4">
                     <h2 class="fw-bold text-white mb-2">
-                        <i class="bi bi-plus-circle-fill text-success me-2"></i>Create New Team
+                        <i class="bi bi-plus-circle-fill text-success me-2"></i>Add New Team
                     </h2>
                     <p class="text-light-emphasis mb-0">
                         Add a new football team to EuroLeaguesScore
                     </p>
                 </div>
 
-                <form asp-action="Create" method="post">
+                <form asp-action="Add" method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                     <div class="form-floating mb-3">
@@ -39,7 +39,22 @@
                     </div>
 
                     <div class="form-floating mb-3">
-                        <select asp-for="@Model.LeagueId" class="form-control" aria-required="true">
+                        <select asp-for="@Model.ManagerId" class="form-select team-input">
+                            <option value="" disabled selected hidden>Choose manager</option>
+
+                            @foreach (var manager in Model.Managers)
+                            {
+                                <option value="@manager.Id">@manager.Name</option>
+                            }
+                        </select>
+
+                        <span asp-validation-for="ManagerId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <select asp-for="@Model.LeagueId" class="form-select team-input">
+                            <option value="" disabled selected hidden>Choose League</option>
+
                             @foreach (var league in Model.Leagues)
                             {
                                 <option value="@league.Id">@league.Name</option>
@@ -76,7 +91,7 @@
 
                     <div class="d-flex gap-2 mt-4">
                         <button type="submit" class="btn btn-success flex-fill">
-                            <i class="bi bi-check-circle me-1"></i>Create Team
+                            <i class="bi bi-check-circle me-1"></i>Add Team
                         </button>
 
                         <a asp-action="All" class="btn btn-outline-light flex-fill">
