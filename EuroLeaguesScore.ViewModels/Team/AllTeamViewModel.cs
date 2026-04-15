@@ -18,5 +18,7 @@
         public int Losses { get; set; }
 
         public int Draws { get; set; }
+
+        public string? ManagerName { get; set; }
     }
 }
