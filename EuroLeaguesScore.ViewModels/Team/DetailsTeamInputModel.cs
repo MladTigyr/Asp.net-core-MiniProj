@@ -1,13 +1,12 @@
 ﻿namespace EuroLeaguesScore.ViewModels.Team
 {
-    using EuroLeaguesScore.Data.Models;
-    using System.ComponentModel.DataAnnotations;
+    using EuroLeaguesScore.ViewModels.Player;
 
     public class DetailsTeamInputModel : AllTeamViewModel
     {
 
 
-        public IEnumerable<Player> Players { get; set; } 
-            = new HashSet<Player>();   
+        public IEnumerable<DetailsPlayerViewModel> Players { get; set; } 
+            = new HashSet<DetailsPlayerViewModel>();   
     }
 }

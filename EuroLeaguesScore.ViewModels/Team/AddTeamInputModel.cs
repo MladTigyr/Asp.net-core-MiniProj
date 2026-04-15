@@ -4,7 +4,7 @@
     using System.ComponentModel.DataAnnotations;
     using static GCommon.EntityValidations;
 
-    public class CreateTeamInputModel
+    public class AddTeamInputModel
     {
         [Required]
         [MinLength(TeamNameMinLength)]
@@ -20,6 +20,11 @@
         [MinLength(TeamCityMinLength)]
         [MaxLength(TeamCityMaxLength)]
         public string City { get; set; } = null!;
+
+        public int? ManagerId { get; set; }
+
+        public IEnumerable<Manager> Managers { get; set; } =
+            new HashSet<Manager>();
 
         [Required]
         public int LeagueId { get; set; }
