@@ -19,12 +19,14 @@
         //PlayerValidations
         public const int PlayerNameMinLength = 3;
         public const int PlayerNameMaxLength = 100;
+        public const int PlayerAgeMin = 15;
+        public const int PlayerAgeMax = 55;
 
         //ManagerValidations
         public const int ManagerNameMinLength = 3;
         public const int ManagerNameMaxLength = 100;
 
-        //Wins/Losses/Draws Validations
+        //Wins/Losses/Draws/Goals/Assists Validations
         public const int MinWinsLossesDraws = 0;
         public const int MaxWinsLossesDraws = int.MaxValue;
     }
