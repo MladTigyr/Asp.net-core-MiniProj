@@ -5,6 +5,8 @@
     using EuroLeaguesScore.Services.Core.Contracts;
     using EuroLeaguesScore.ViewModels.Player;
 
+    using static GCommon.ViewModelsMessages;
+
     public class PlayerController : BaseController
     {
         private readonly IPlayerService playerService;
@@ -50,6 +52,30 @@
             };
 
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Add(AddPlayerInputModel model)
+        {
+            model.TeamNames = await playerService.GetAllTeamsAsync();
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
+            {
+                await playerService.AddPlayerToDbAsync(model);
+
+                return RedirectToAction(nameof(All));
+            }
+            catch
+            {
+                ModelState.AddModelError(string.Empty, AddError);
+
+                return View(model);
+            }
         }
     }
 }

@@ -17,6 +17,22 @@ namespace EuroLeaguesScore.Services.Core
             this.dbContext = dbContext;
         }
 
+        public async Task AddPlayerToDbAsync(AddPlayerInputModel model)
+        {
+            Player player = new Player
+            {
+                Name = model.Name,
+                Age = model.Age,
+                Position = model.Position,
+                Goals = model.Goals,
+                Assists = model.Assists,
+                TeamId = model.TeamId,
+            };
+
+            await dbContext.AddAsync(player);
+            await dbContext.SaveChangesAsync();
+        }
+
         public async Task<IEnumerable<AllPlayersViewModel>> GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync()
         {
             return await dbContext.Players
