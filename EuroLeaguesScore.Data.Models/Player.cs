@@ -26,10 +26,5 @@
 
         [ForeignKey(nameof(TeamId))]
         public virtual Team Team { get; set; } = null!;
-
-        public int ManagerId { get; set; }
-
-        [ForeignKey(nameof(ManagerId))]
-        public virtual Manager Manager { get; set; } = null!;
     }
 }

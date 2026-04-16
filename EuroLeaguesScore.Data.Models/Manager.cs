@@ -20,8 +20,5 @@
 
         [ForeignKey(nameof(TeamId))]
         public virtual Team? Team { get; set; }
-
-        public virtual ICollection<Player> Players { get; set; } 
-                = new HashSet<Player>();
     }
 }
