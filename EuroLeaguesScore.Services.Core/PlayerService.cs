@@ -33,6 +33,42 @@ namespace EuroLeaguesScore.Services.Core
             await dbContext.SaveChangesAsync();
         }
 
+        public async Task<bool> DeletePlayerFromDbAsync(int playerId)
+        {
+            Player? player = await GetPlayerWithHisTeamNameIfExistsAsync(playerId);
+
+            if (player == null)
+            {
+                return false;
+            }
+
+            dbContext.Remove(player);
+            await dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> EditPlayerToDbAsync(int playerId, EditPlayerInputModel model)
+        {
+            Player? player = await GetPlayerWithHisTeamNameIfExistsAsync(playerId);
+
+            if (player == null)
+            {
+                return false;
+            }
+
+            player.Name = model.Name;
+            player.Age = model.Age;
+            player.Goals = model.Goals;
+            player.Assists = model.Assists;
+            player.Position = model.Position;
+            player.TeamId = model.TeamId;
+
+            await dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
         public async Task<IEnumerable<AllPlayersViewModel>> GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync()
         {
             return await dbContext.Players
@@ -50,8 +86,10 @@ namespace EuroLeaguesScore.Services.Core
                     Position = p.Position.ToString(),
                     Goals = p.Goals,
                     Assists = p.Assists,
+                    TeamId = p.Team.Id,
                     TeamName = p.Team.Name,
-                    LeagueName = p.Team.League.Name
+                    LeagueId = p.Team.League.Id,
+                    LeagueName = p.Team.League.Name,
                 })
                 .ToArrayAsync();
         }
@@ -65,6 +103,23 @@ namespace EuroLeaguesScore.Services.Core
                     Name = t.Name,
                 })
                 .ToArrayAsync();
+        }
+
+        public async Task<DeletePlayerViewModel?> GetDeletePlayerViewModelAsync(int playerId)
+        {
+            Player? player = await GetPlayerWithHisTeamNameIfExistsAsync(playerId);
+
+            if (player == null)
+            {
+                return null;
+            }
+
+            DeletePlayerViewModel model = new DeletePlayerViewModel
+            {
+                Id = player.Id,
+            };
+
+            return model;
         }
 
         public async Task<DetailsPlayerViewModel?> GetDetailsPlayerViewModelAsync(int playerId)
@@ -88,6 +143,30 @@ namespace EuroLeaguesScore.Services.Core
             };
 
             return detailsPlayerViewModel;
+        }
+
+        public async Task<EditPlayerInputModel?> GetEditPlayerInputModelAsync(int playerId)
+        {
+            Player? player = await GetPlayerWithHisTeamNameIfExistsAsync(playerId);
+
+            if (player == null)
+            {
+                return null;
+            }
+
+            EditPlayerInputModel model = new EditPlayerInputModel
+            {
+                Id = player.Id,
+                Name = player.Name,
+                Age = player.Age,
+                Goals = player.Goals,
+                Assists = player.Assists,
+                TeamId = player.Team.Id,
+                TeamNames = await GetAllTeamsAsync(),
+                Position = player.Position
+            };
+
+            return model;
         }
 
         public async Task<Player?> GetPlayerWithHisTeamNameIfExistsAsync(int playerId)

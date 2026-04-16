@@ -15,5 +15,13 @@ namespace EuroLeaguesScore.Services.Core.Contracts
         public Task<IEnumerable<Team>> GetAllTeamsAsync();
 
         public Task AddPlayerToDbAsync(AddPlayerInputModel model);
+
+        public Task<EditPlayerInputModel?> GetEditPlayerInputModelAsync(int playerId);
+
+        public Task<bool> EditPlayerToDbAsync(int playerId, EditPlayerInputModel model);
+
+        public Task<DeletePlayerViewModel?> GetDeletePlayerViewModelAsync(int playerId);
+
+        public Task<bool> DeletePlayerFromDbAsync(int playerId);
     }
 }
