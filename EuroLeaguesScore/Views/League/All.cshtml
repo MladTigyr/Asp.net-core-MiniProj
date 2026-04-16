@@ -1,0 +1,63 @@
+﻿@model IEnumerable<AllLeagueViewModel>
+
+@{
+    ViewData["Title"] = "Top 5 Leagues";
+}
+
+<div class="league-page-header text-center mb-5">
+    <h2 class="fw-bold text-white mb-2">
+        <i class="bi bi-trophy-fill text-warning me-2"></i>Top 5 European Leagues
+    </h2>
+    <p class="text-light-emphasis mb-0">
+        Explore the biggest football competitions in Europe
+    </p>
+</div>
+
+<div class="row g-4">
+    @foreach (var league in Model)
+    {
+        var leagueClass = league.Name switch
+        {
+            "Premier League" => "league-premier",
+            "La Liga" => "league-laliga",
+            "Bundesliga" => "league-bundesliga",
+            "Serie A" => "league-seriea",
+            "Ligue 1" => "league-ligue1",
+            _ => "league-default"
+        };
+
+        var leagueDescription = league.Name switch
+        {
+            "Premier League" => "Fast, intense, and packed with world-class clubs and dramatic title races.",
+            "La Liga" => "Technical brilliance, iconic rivalries, and some of football’s most historic teams.",
+            "Bundesliga" => "High-scoring football, electric stadiums, and relentless attacking play.",
+            "Serie A" => "Tactical mastery, defensive quality, and a deep footballing tradition.",
+            "Ligue 1" => "Rising stars, elite talent, and one of Europe’s most exciting competitions.",
+            _ => "One of Europe’s elite football competitions."
+        };
+
+        <div class="col-md-6 col-xl-4">
+            <div class="league-showcase-card @leagueClass">
+                <div class="league-top-bar"></div>
+
+                <div class="league-card-body">
+                    <div class="league-country-badge">
+                        <i class="bi bi-geo-alt-fill me-1"></i>@league.Country
+                    </div>
+
+                    <h3 class="league-card-title">@league.Name</h3>
+
+                    <p class="league-card-text">
+                        @leagueDescription
+                    </p>
+
+                    <a asp-action="Details"
+                       asp-route-id="@league.Id"
+                       class="btn league-details-btn w-100">
+                        <i class="bi bi-eye me-1"></i>View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
