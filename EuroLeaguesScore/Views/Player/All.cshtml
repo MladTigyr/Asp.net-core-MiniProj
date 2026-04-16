@@ -42,8 +42,22 @@
                                 <td class="fw-semibold text-white">@player.Name</td>
                                 <td>@player.Age</td>
                                 <td>@player.Position</td>
-                                <td>@player.LeagueName</td>
-                                <td>@player.TeamName</td>
+                                <td>
+                                    <a asp-controller="League"
+                                       asp-action="Details"
+                                       asp-route-id="@player.LeagueId"
+                                       class="fw-semibold text-white text-decoration-none">
+                                        @player.LeagueName
+                                    </a>
+                                </td>
+                                <td>
+                                    <a asp-controller="Team"
+                                       asp-action="Details"
+                                       asp-route-id="@player.TeamId"
+                                       class="fw-semibold text-white text-decoration-none">
+                                        @player.TeamName
+                                    </a>
+                                </td>
                                 <td>@player.Goals</td>
                                 <td>@player.Assists</td>
                                 <td>
