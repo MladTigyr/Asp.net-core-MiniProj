@@ -25,6 +25,8 @@
         //ManagerValidations
         public const int ManagerNameMinLength = 3;
         public const int ManagerNameMaxLength = 100;
+        public const int ManagerAgeMin = 28;
+        public const int ManagerAgeMax = 100;
 
         //Wins/Losses/Draws/Goals/Assists Validations
         public const int MinWinsLossesDraws = 0;
