@@ -1,0 +1,48 @@
+﻿@model DeleteManagerViewModel
+
+@{
+    ViewData["Title"] = "Delete Manager";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-lg-6">
+        <div class="card team-form-card shadow-lg border-0 overflow-hidden">
+
+            <!-- subtle header bar -->
+            <div style="height: 6px; background: linear-gradient(90deg, #22c55e, #16a34a);"></div>
+
+            <div class="card-body p-4 p-md-5 text-center">
+
+                <h2 class="fw-bold text-white mb-3">
+                    Delete Manager
+                </h2>
+
+                <p class="text-light mb-2 fs-5">
+                    Are you sure you want to remove
+                    <span class="fw-semibold text-white">@Model.Name</span>?
+                </p>
+
+                <p class="text-light-emphasis mb-4">
+                    This action cannot be undone.
+                </p>
+
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+
+                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+
+                        <button type="submit" class="btn btn-danger px-4">
+                            <i class="bi bi-trash me-1"></i>Delete
+                        </button>
+
+                        <a asp-action="All" class="btn btn-outline-light px-4">
+                            <i class="bi bi-arrow-left me-1"></i>Cancel
+                        </a>
+
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
