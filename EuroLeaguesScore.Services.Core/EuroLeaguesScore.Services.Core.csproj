@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EuroLeaguesScore.Data.Models\EuroLeaguesScore.Data.Models.csproj" />
+    <ProjectReference Include="..\EuroLeaguesScore.Data\EuroLeaguesScore.Data.csproj" />
+    <ProjectReference Include="..\EuroLeaguesScore.ViewModels\EuroLeaguesScore.ViewModels.csproj" />
+  </ItemGroup>
+
+</Project>

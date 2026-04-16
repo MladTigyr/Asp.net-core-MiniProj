@@ -18,9 +18,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EuroLeaguesScore.Data.Models\EuroLeaguesScore.Data.Models.csproj" />
-    <ProjectReference Include="..\EuroLeaguesScore.Data\EuroLeaguesScore.Data.csproj" />
+    <ProjectReference Include="..\EuroLeaguesScore.Services.Core\EuroLeaguesScore.Services.Core.csproj" />
     <ProjectReference Include="..\EuroLeaguesScore.ViewModels\EuroLeaguesScore.ViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Player\" />
   </ItemGroup>
 
 </Project>
