@@ -1,0 +1,100 @@
+﻿@model AddPlayerInputModel
+
+@{
+    ViewData["Title"] = "Add Player";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-7 col-md-9">
+        <div class="card team-form-card shadow-lg border-0">
+            <div class="card-body p-4 p-md-5">
+
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold text-white mb-2">
+                        <i class="bi bi-person-plus-fill text-success me-2"></i>Add Player
+                    </h2>
+                    <p class="text-light-emphasis mb-0">
+                        Add a new player to a team
+                    </p>
+                </div>
+
+                <form asp-action="Add" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="form-floating mb-3">
+                        <input asp-for="Name" class="form-control team-input" placeholder="Name" />
+                        <label asp-for="Name">Player Name</label>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input asp-for="Age" class="form-control team-input" placeholder="Age" />
+                        <label asp-for="Age">Age</label>
+                        <span asp-validation-for="Age" class="text-danger"></span>
+                    </div>
+
+                    <!-- Position -->
+                    <div class="mb-3">
+                        <label class="form-label text-light">Position</label>
+                        <select asp-for="Position" class="form-select team-input">
+                            <option value="">Choose position</option>
+                            <option value="Goalkeeper">Goalkeeper</option>
+                            <option value="Defender">Defender</option>
+                            <option value="Midfielder">Midfielder</option>
+                            <option value="Forward">Forward</option>
+                        </select>
+                        <span asp-validation-for="Position" class="text-danger"></span>
+                    </div>
+
+                    <!-- Team -->
+                    <div class="mb-3">
+                        <label class="form-label text-light">Team</label>
+                        <select asp-for="TeamId" class="form-select team-input">
+                            <option value="">Choose team</option>
+
+                            @foreach (var team in Model.TeamNames)
+                            {
+                                <option value="@team.Id">@team.Name</option>
+                            }
+                        </select>
+
+                        <span asp-validation-for="TeamId" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Goals" class="form-control team-input" placeholder="Goals" />
+                                <label asp-for="Goals">Goals</label>
+                                <span asp-validation-for="Goals" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Assists" class="form-control team-input" placeholder="Assists" />
+                                <label asp-for="Assists">Assists</label>
+                                <span asp-validation-for="Assists" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-success flex-fill">
+                            <i class="bi bi-check-circle me-1"></i>Add Player
+                        </button>
+
+                        <a asp-action="All" class="btn btn-outline-light flex-fill">
+                            <i class="bi bi-arrow-left me-1"></i>Back to Players
+                        </a>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
