@@ -20,6 +20,7 @@ namespace EuroLeaguesScore
 
             builder.Services.AddScoped<ITeamService, TeamService>();
             builder.Services.AddScoped<IPlayerService, PlayerService>();
+            builder.Services.AddScoped<ILeagueService, LeagueService>();
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => {
                 ConfigureIdentity(options, builder);
