@@ -22,8 +22,4 @@
     <ProjectReference Include="..\EuroLeaguesScore.ViewModels\EuroLeaguesScore.ViewModels.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Player\" />
-  </ItemGroup>
-
 </Project>

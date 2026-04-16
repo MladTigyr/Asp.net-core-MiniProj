@@ -1,0 +1,67 @@
+﻿@model DetailsPlayerViewModel
+
+@{
+    ViewData["Title"] = "Player Details";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card team-details-card shadow-lg border-0">
+            <div class="card-body p-4 p-md-5">
+
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+                    <div>
+                        <h2 class="fw-bold text-white mb-2">
+                            <i class="bi bi-person-badge-fill text-success me-2"></i>@Model.Name
+                        </h2>
+                        <p class="mb-1 text-light">
+                            <i class="bi bi-calendar-event text-success me-2"></i>Age: @Model.Age
+                        </p>
+                        <p class="mb-1 text-light-emphasis">
+                            <i class="bi bi-diagram-3-fill text-warning me-2"></i>Position: @Model.Position
+                        </p>
+                        <p class="mb-1 text-light-emphasis">
+                            <i class="bi bi-shield-fill text-success me-2"></i>Team: @Model.TeamName
+                        </p>
+                        @* <p class="mb-0 text-light-emphasis">
+                            <i class="bi bi-award-fill text-warning me-2"></i>League: @Model.LeagueName
+                        </p> *@
+                    </div>
+
+                    <div class="mt-3 mt-md-0">
+                        <a asp-action="All" class="btn btn-outline-light">
+                            <i class="bi bi-arrow-left me-1"></i>Back to Players
+                        </a>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="stat-box text-center">
+                            <h6 class="text-light-emphasis mb-2">Goals</h6>
+                            <h3 class="text-success fw-bold mb-0">@Model.Goals</h3>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="stat-box text-center">
+                            <h6 class="text-light-emphasis mb-2">Assists</h6>
+                            <h3 class="text-warning fw-bold mb-0">@Model.Assists</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 flex-wrap">
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">
+                        <i class="bi bi-pencil-square me-1"></i>Edit Player
+                    </a>
+
+                    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">
+                        <i class="bi bi-trash me-1"></i>Delete Player
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,101 @@
+﻿@model IEnumerable<AllPlayersViewModel>
+
+@{
+    ViewData["Title"] = "All Players";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-white mb-1">
+            <i class="bi bi-person-badge-fill text-success me-2"></i>All Players
+        </h2>
+        <p class="text-light-emphasis mb-0">Browse all players across the leagues</p>
+    </div>
+
+    <a asp-action="Add" class="btn btn-success">
+        <i class="bi bi-plus-circle me-1"></i>Add Player
+    </a>
+</div>
+
+<div class="card team-details-card shadow-lg border-0">
+    <div class="card-body p-4">
+        @if (Model != null && Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table team-players-table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Age</th>
+                            <th>Position</th>
+                            <th>League</th>
+                            <th>Team</th>
+                            <th>Goals</th>
+                            <th>Assists</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var player in Model)
+                        {
+                            <tr>
+                                <td class="fw-semibold text-white">@player.Name</td>
+                                <td>@player.Age</td>
+                                <td>@player.Position</td>
+                                <td>
+                                    <a asp-controller="League"
+                                       asp-action="Details"
+                                       asp-route-id="@player.LeagueId"
+                                       class="fw-semibold text-white text-decoration-none">
+                                        @player.LeagueName
+                                    </a>
+                                </td>
+                                <td>
+                                    <a asp-controller="Team"
+                                       asp-action="Details"
+                                       asp-route-id="@player.TeamId"
+                                       class="fw-semibold text-white text-decoration-none">
+                                        @player.TeamName
+                                    </a>
+                                </td>
+                                <td>@player.Goals</td>
+                                <td>@player.Assists</td>
+                                <td>
+                                    <div class="d-flex gap-2 justify-content-end">
+                                        <a asp-action="Details"
+                                           asp-route-id="@player.Id"
+                                           class="btn btn-sm btn-outline-success">
+                                            <i class="bi bi-eye me-1"></i>Details
+                                        </a>
+
+                                        <a asp-action="Edit"
+                                           asp-route-id="@player.Id"
+                                           class="btn btn-sm btn-success">
+                                            <i class="bi bi-pencil-square me-1"></i>Edit
+                                        </a>
+
+                                        <a asp-action="Delete"
+                                           asp-route-id="@player.Id"
+                                           class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-trash me-1"></i>Delete
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="empty-squad text-center py-5">
+                <i class="bi bi-person-x fs-1 text-secondary"></i>
+                <p class="text-light-emphasis mt-3 mb-3">No players have been added yet.</p>
+                <a asp-action="Add" class="btn btn-success">
+                    <i class="bi bi-plus-circle me-1"></i>Add First Player
+                </a>
+            </div>
+        }
+    </div>
+</div>

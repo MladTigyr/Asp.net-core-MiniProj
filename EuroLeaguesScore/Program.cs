@@ -19,6 +19,7 @@ namespace EuroLeaguesScore
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddScoped<ITeamService, TeamService>();
+            builder.Services.AddScoped<IPlayerService, PlayerService>();
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => {
                 ConfigureIdentity(options, builder);
