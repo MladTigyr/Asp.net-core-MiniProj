@@ -1,6 +1,8 @@
 namespace EuroLeaguesScore
 {
     using EuroLeaguesScore.Data;
+    using EuroLeaguesScore.Services.Core;
+    using EuroLeaguesScore.Services.Core.Contracts;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +17,8 @@ namespace EuroLeaguesScore
             builder.Services.AddDbContext<EuroLeaguesScoreDbContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+            builder.Services.AddScoped<ITeamService, TeamService>();
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => {
                 ConfigureIdentity(options, builder);
