@@ -77,5 +77,106 @@
                 return View(model);
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest();
+            }
+
+            EditPlayerInputModel? model = await playerService
+                .GetEditPlayerInputModelAsync(id);
+
+            if (model == null)
+            {
+                return NotFound();
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, EditPlayerInputModel model)
+        {
+            model.TeamNames = await playerService
+                .GetAllTeamsAsync();
+
+            if (id <= 0)
+            {
+                return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
+            {
+                bool playerExists = await playerService
+                    .EditPlayerToDbAsync(id, model);
+                if (!playerExists)
+                {
+                    return NotFound();
+                }
+
+                return RedirectToAction(nameof(All));
+            }
+            catch
+            {
+                ModelState.AddModelError(string.Empty, EditError);
+
+                return View(model);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest();
+            }
+
+            DeletePlayerViewModel? model = await playerService.GetDeletePlayerViewModelAsync(id);
+
+            if (model == null)
+            {
+                return NotFound();
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id, DeletePlayerViewModel model)
+        {
+            if (id <= 0)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                bool playerExists = await playerService
+                    .DeletePlayerFromDbAsync(id);
+
+                if (!playerExists)
+                {
+                    return NotFound();
+                }
+
+                return RedirectToAction(nameof(All));
+            }
+            catch
+            {
+                ModelState.AddModelError(string.Empty, DeleteError);
+
+                return View(model);
+            }
+        }
+
     }
 }
