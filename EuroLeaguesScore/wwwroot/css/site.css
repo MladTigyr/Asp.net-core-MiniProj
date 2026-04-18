@@ -143,3 +143,20 @@ a {
     border: 1px dashed rgba(255, 255, 255, 0.12);
     border-radius: 16px;
 }
+
+.error-top-bar {
+    height: 6px;
+    background: linear-gradient(90deg, #22c55e, #16a34a);
+}
+
+.error-top-bar-danger {
+    background: linear-gradient(90deg, #ef4444, #b91c1c);
+}
+
+.error-icon i {
+    font-size: 4rem;
+}
+
+.error-icon {
+    line-height: 1;
+}

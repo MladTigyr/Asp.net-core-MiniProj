@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "500 - Server Error";
+}
+
+@section Styles{
+    <link rel="stylesheet" href="~/css/team.css" asp-append-version="true" />
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card team-details-card shadow-lg border-0 overflow-hidden text-center">
+            <div class="error-top-bar error-top-bar-danger"></div>
+
+            <div class="card-body p-5">
+                <div class="error-icon mb-3">
+                    <i class="bi bi-bug-fill text-danger"></i>
+                </div>
+
+                <h1 class="fw-bold text-white mb-3">500</h1>
+                <h3 class="text-white mb-3">Internal Server Error</h3>
+
+                <p class="text-light-emphasis mb-4">
+                    Something went wrong on our side. Please try again later.
+                </p>
+
+                <a asp-controller="Home" asp-action="Index" class="btn btn-success">
+                    <i class="bi bi-house-door-fill me-1"></i>Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
