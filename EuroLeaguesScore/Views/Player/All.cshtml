@@ -5,13 +5,25 @@
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h2 class="fw-bold text-white mb-1">
-            <i class="bi bi-person-badge-fill text-success me-2"></i>All Players
-        </h2>
-        <p class="text-light-emphasis mb-0">Browse all players across the leagues</p>
+
+    <!-- LEFT -->
+    <div class="d-flex align-items-center gap-3">
+        <div>
+            <h2 class="fw-bold text-white mb-1">
+                <i class="bi bi-person-badge-fill text-success me-2"></i>All Players
+            </h2>
+            <p class="text-light-emphasis mb-0">Browse all players across the leagues</p>
+        </div>
+
+        <a asp-controller="Favourite"
+           asp-action="Players"
+           class="btn btn-warning text-dark fw-semibold">
+            <i class="bi bi-star-fill me-1"></i>
+            Favourites
+        </a>
     </div>
 
+    <!-- RIGHT -->
     <a asp-action="Add" class="btn btn-success">
         <i class="bi bi-plus-circle me-1"></i>Add Player
     </a>
@@ -25,6 +37,7 @@
                 <table class="table team-players-table align-middle">
                     <thead>
                         <tr>
+                            <th></th> <!-- ⭐ column -->
                             <th>Name</th>
                             <th>Age</th>
                             <th>Position</th>
@@ -39,9 +52,38 @@
                         @foreach (var player in Model)
                         {
                             <tr>
+                                <!-- ⭐ Favourite -->
+                                <td>
+                                    @if (User.Identity?.IsAuthenticated ?? false)
+                                    {
+                                        <form asp-controller="Favourite"
+                                              asp-action="TogglePlayer"
+                                              method="post">
+
+                                            <input type="hidden" name="playerId" value="@player.Id" />
+
+                                            <button type="submit"
+                                                    class="btn p-0 border-0 bg-transparent shadow-none"
+                                                    title="Toggle favourite">
+
+                                                @if (player.IsFavourite)
+                                                {
+                                                    <i class="bi bi-star-fill text-warning fs-5"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="bi bi-star text-light-emphasis fs-5"></i>
+                                                }
+
+                                            </button>
+                                        </form>
+                                    }
+                                </td>
+
                                 <td class="fw-semibold text-white">@player.Name</td>
                                 <td>@player.Age</td>
                                 <td>@player.Position</td>
+
                                 <td>
                                     <a asp-controller="League"
                                        asp-action="Details"
@@ -50,6 +92,7 @@
                                         @player.LeagueName
                                     </a>
                                 </td>
+
                                 <td>
                                     <a asp-controller="Team"
                                        asp-action="Details"
@@ -58,8 +101,10 @@
                                         @player.TeamName
                                     </a>
                                 </td>
+
                                 <td>@player.Goals</td>
                                 <td>@player.Assists</td>
+
                                 <td>
                                     <div class="d-flex gap-2 justify-content-end">
                                         <a asp-action="Details"

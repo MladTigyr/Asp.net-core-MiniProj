@@ -15,5 +15,7 @@
         public int Assists { get; set; }
 
         public string TeamName { get; set; } = null!;
+
+        public bool IsFavourite { get; set; }
     }
 }
