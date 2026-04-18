@@ -5,6 +5,8 @@
     using EuroLeaguesScore.ViewModels.Manager;
 
     using static GCommon.ViewModelsMessages;
+    using Microsoft.AspNetCore.Authorization;
+
     public class ManagerController : BaseController
     {
         private readonly IManagerService managerService;
@@ -15,6 +17,7 @@
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> All()
         {
             IEnumerable<AllManagerViewModel> models = await managerService
@@ -62,6 +65,7 @@
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
             if (id <= 0)
