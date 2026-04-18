@@ -69,9 +69,9 @@ namespace EuroLeaguesScore.Services.Core
             return true;
         }
 
-        public async Task<IEnumerable<AllPlayersViewModel>> GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync()
+        public async Task<IEnumerable<AllPlayersViewModel>> GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync(string? userId)
         {
-            return await dbContext.Players
+            IEnumerable<AllPlayersViewModel> models = await dbContext.Players
                 .AsNoTracking()
                 .Include(p => p.Team)
                 .ThenInclude(p => p.League)
@@ -92,6 +92,26 @@ namespace EuroLeaguesScore.Services.Core
                     LeagueName = p.Team.League.Name,
                 })
                 .ToArrayAsync();
+
+            if (userId != null)
+            {
+                IEnumerable<UserPlayer> players = await dbContext.UserPlayers
+                    .Where(up => up.UserId == userId)
+                    .ToArrayAsync();
+
+                if (players.Any())
+                {
+                    foreach (AllPlayersViewModel model in models)
+                    {
+                        if (players.Any(up => up.UserId == userId && up.PlayerId == model.Id))
+                        {
+                            model.IsFavourite = true;
+                        }
+                    }
+                }
+            }
+
+            return models;
         }
 
         public async Task<IEnumerable<Team>> GetAllTeamsAsync()
@@ -122,7 +142,7 @@ namespace EuroLeaguesScore.Services.Core
             return model;
         }
 
-        public async Task<DetailsPlayerViewModel?> GetDetailsPlayerViewModelAsync(int playerId)
+        public async Task<DetailsPlayerViewModel?> GetDetailsPlayerViewModelAsync(int playerId, string userId)
         {
             Player? player = await GetPlayerWithHisTeamNameIfExistsAsync(playerId);
 
@@ -140,7 +160,20 @@ namespace EuroLeaguesScore.Services.Core
                 Goals = player.Goals,
                 Assists = player.Assists,
                 TeamName = player.Team.Name,
+                
             };
+
+            if (userId != null)
+            {
+                IEnumerable<UserPlayer> userPlayers = await dbContext.UserPlayers
+                    .Where(up => up.UserId == userId)
+                    .ToArrayAsync();
+
+                if (userPlayers.Any(up => up.UserId == userId && up.PlayerId == detailsPlayerViewModel.Id))
+                {
+                    detailsPlayerViewModel.IsFavourite = true;
+                }
+            }
 
             return detailsPlayerViewModel;
         }

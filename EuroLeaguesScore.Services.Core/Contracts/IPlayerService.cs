@@ -6,11 +6,11 @@ namespace EuroLeaguesScore.Services.Core.Contracts
 
     public interface IPlayerService
     {
-        public Task<IEnumerable<AllPlayersViewModel>> GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync();
+        public Task<IEnumerable<AllPlayersViewModel>> GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync(string? userId);
 
         public Task<Player?> GetPlayerWithHisTeamNameIfExistsAsync(int playerId);
 
-        public Task<DetailsPlayerViewModel?> GetDetailsPlayerViewModelAsync(int playerId);
+        public Task<DetailsPlayerViewModel?> GetDetailsPlayerViewModelAsync(int playerId, string userId);
 
         public Task<IEnumerable<Team>> GetAllTeamsAsync();
 

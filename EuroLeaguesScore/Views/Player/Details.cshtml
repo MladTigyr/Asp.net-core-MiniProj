@@ -23,9 +23,6 @@
                         <p class="mb-1 text-light-emphasis">
                             <i class="bi bi-shield-fill text-success me-2"></i>Team: @Model.TeamName
                         </p>
-                        @* <p class="mb-0 text-light-emphasis">
-                            <i class="bi bi-award-fill text-warning me-2"></i>League: @Model.LeagueName
-                        </p> *@
                     </div>
 
                     <div class="mt-3 mt-md-0">
@@ -59,6 +56,30 @@
                     <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">
                         <i class="bi bi-trash me-1"></i>Delete Player
                     </a>
+
+                    @if (User.Identity?.IsAuthenticated ?? false)
+                    {
+                        @if (!Model.IsFavourite)
+                        {
+                            <form asp-controller="Favourite"
+                                  asp-action="AddOrRemovePlayer"
+                                  method="post"
+                                  class="d-inline">
+                                <input type="hidden" name="playerId" value="@Model.Id" />
+                                <button type="submit" class="btn btn-outline-warning">
+                                    <i class="bi bi-star me-1"></i>Add to Favourites
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <a asp-controller="Favourite"
+                               asp-action="Players"
+                               class="btn btn-warning text-dark fw-semibold">
+                                <i class="bi bi-star-fill me-1"></i>View All Favourites
+                            </a>
+                        }
+                    }
                 </div>
 
             </div>

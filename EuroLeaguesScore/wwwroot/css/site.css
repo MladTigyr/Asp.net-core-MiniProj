@@ -391,3 +391,12 @@ a {
     .standings-table td:nth-child(3) {
         text-align: left;
     }
+
+/* Star */
+.team-favourite-btn i {
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.team-favourite-btn:hover i {
+    transform: scale(1.15);
+}

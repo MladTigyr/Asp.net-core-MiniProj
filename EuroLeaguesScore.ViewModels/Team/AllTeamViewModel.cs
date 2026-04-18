@@ -20,5 +20,7 @@
         public int Draws { get; set; }
 
         public string? ManagerName { get; set; }
+
+        public bool IsFavourite { get; set; }
     }
 }
