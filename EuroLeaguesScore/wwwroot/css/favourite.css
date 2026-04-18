@@ -1,0 +1,25 @@
+﻿.favourite-page-header {
+    margin-bottom: 1.5rem;
+}
+
+.favourite-card-topbar {
+    height: 6px;
+    background: linear-gradient(90deg, #22c55e, #16a34a);
+}
+
+.favourite-star-icon {
+    color: #facc15;
+    font-size: 1.25rem;
+}
+
+.favourite-remove-btn {
+    transition: all 0.2s ease;
+}
+
+.favourite-remove-btn:hover {
+    transform: translateY(-1px);
+}
+
+.favourite-empty-state-icon {
+    color: #facc15;
+}
