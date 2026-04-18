@@ -20,7 +20,10 @@
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            IEnumerable<AllPlayersViewModel> model = await playerService.GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync();
+            string userId = GetUser();
+
+            IEnumerable<AllPlayersViewModel> model = await playerService
+                .GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync(userId);
 
             return View(model);
         }
@@ -33,7 +36,10 @@
                 return BadRequest();
             }
 
-            DetailsPlayerViewModel? model = await playerService.GetDetailsPlayerViewModelAsync(id);
+            string userId = GetUser();
+
+            DetailsPlayerViewModel? model = await playerService
+                .GetDetailsPlayerViewModelAsync(id, userId);
 
             if (model == null)
             {

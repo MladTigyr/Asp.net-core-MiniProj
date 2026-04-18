@@ -36,9 +36,9 @@
             await dbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<AllTeamViewModel>> AllTeamsOrderedByLeagueNameThenByNameAsync()
+        public async Task<IEnumerable<AllTeamViewModel>> AllTeamsOrderedByLeagueNameThenByNameAsync(string? userId)
         {
-            return await dbContext.Teams
+            IEnumerable<AllTeamViewModel> models = await dbContext.Teams
                 .AsNoTracking()
                 .Include(t => t.League)
                 .Include(t => t.Manager)
@@ -57,6 +57,23 @@
                     ManagerName = t.Manager != null ? t.Manager.Name : "No manager"
                 })
                 .ToArrayAsync();
+
+            if (userId != null)
+            {
+                IEnumerable<UserTeam> teams = await dbContext.UserTeams
+                .AsNoTracking()
+                .ToArrayAsync();
+
+                foreach (var model in models)
+                {
+                    if (teams.Any(t => t.TeamId == model.Id && t.UserId == userId))
+                    {
+                        model.IsFavourite = true;
+                    }
+                }
+            }
+
+            return models;
         }
 
         public async Task<bool> DeleteTeamFromDbAsync(int teamId, DeleteTeamViewModel model)
@@ -132,7 +149,7 @@
                 .ToArrayAsync();
         }
 
-        public async Task<DetailsTeamInputModel?> GetDetailsTeamViewModelAsync(int teamId)
+        public async Task<DetailsTeamInputModel?> GetDetailsTeamViewModelAsync(int teamId, string userId)
         {
             Team? team = await GetTeamByIdAsync(teamId);
 
@@ -154,6 +171,18 @@
                 ManagerName = team.Manager != null ? team.Manager.Name : "No manager",
                 Players = await GetDetailsPlayersOrderedByNameWithTeamIdAsync(team.Id)
             };
+
+            if (userId != null)
+            {
+                IEnumerable<UserTeam> teams = await dbContext.UserTeams
+                    .AsNoTracking()
+                    .ToArrayAsync();
+
+                if(teams.Any(t => t.UserId == userId && t.TeamId == model.Id))
+                {
+                    model.IsFavourite = true;
+                }
+            }
 
             return model;
         }

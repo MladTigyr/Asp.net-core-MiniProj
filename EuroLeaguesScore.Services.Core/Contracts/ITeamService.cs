@@ -6,7 +6,7 @@
 
     public interface ITeamService
     {
-        public Task<IEnumerable<AllTeamViewModel>> AllTeamsOrderedByLeagueNameThenByNameAsync();
+        public Task<IEnumerable<AllTeamViewModel>> AllTeamsOrderedByLeagueNameThenByNameAsync(string? userId);
 
         public Task<IEnumerable<Manager>> GetManagersWhichHaveNotTeamToManageAsync();
 
@@ -22,7 +22,7 @@
         public Task<Team?> GetTeamByIdTrackingAsync(int teamId);
         public Task<Team?> GetTeamByIdTrackingWithoutIncludingAsync(int teamId);
 
-        public Task<DetailsTeamInputModel?> GetDetailsTeamViewModelAsync(int teamId);
+        public Task<DetailsTeamInputModel?> GetDetailsTeamViewModelAsync(int teamId, string userId);
 
         public Task<EditTeamInputModel?> GetEditTeamViewModelAsync(int teamId);
 

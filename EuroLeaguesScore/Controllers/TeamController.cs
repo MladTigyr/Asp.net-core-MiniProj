@@ -17,8 +17,10 @@
         [HttpGet]
         public async Task<IActionResult> All()
         {
+            string? userId = GetUser();
+
             IEnumerable<AllTeamViewModel> teams = await teamService
-                .AllTeamsOrderedByLeagueNameThenByNameAsync();
+                .AllTeamsOrderedByLeagueNameThenByNameAsync(userId);
 
             return View(teams);
         }
@@ -65,7 +67,9 @@
                 return BadRequest();
             }
 
-            DetailsTeamInputModel? model = await teamService.GetDetailsTeamViewModelAsync(id);
+            string userId = GetUser();
+
+            DetailsTeamInputModel? model = await teamService.GetDetailsTeamViewModelAsync(id, userId);
 
             if (model == null)
             {
