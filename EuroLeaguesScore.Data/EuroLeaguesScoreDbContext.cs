@@ -21,7 +21,9 @@
 
         public virtual DbSet<League> Leagues { get; set; } = null!;
 
-        public virtual DbSet<Match> Matches { get; set; } = null!;
+        public virtual DbSet<UserTeam> UserTeams { get; set; } = null!;
+
+        public virtual DbSet<UserPlayer> UserPlayers { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
