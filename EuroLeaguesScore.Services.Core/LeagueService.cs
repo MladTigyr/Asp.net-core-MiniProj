@@ -62,7 +62,7 @@
                     .OrderByDescending(t => t.Wins)
                     .ThenByDescending(t => t.Draws)
                     .ThenBy(t => t.Losses),
-                TotalPlayers = league.Teams.Select(t => t.Players).Count(),
+                TotalPlayers = league.Teams.SelectMany(t => t.Players).Count(),
             };
 
             return model;

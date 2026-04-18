@@ -6,6 +6,7 @@
     using EuroLeaguesScore.ViewModels.Player;
 
     using static GCommon.ViewModelsMessages;
+    using Microsoft.AspNetCore.Authorization;
 
     public class PlayerController : BaseController
     {
@@ -18,6 +19,7 @@
 
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> All()
         {
             string userId = GetUser();
@@ -29,6 +31,7 @@
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
             if (id <= 0)
