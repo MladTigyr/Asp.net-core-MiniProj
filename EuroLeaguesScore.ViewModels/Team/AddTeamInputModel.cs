@@ -1,7 +1,5 @@
 ﻿namespace EuroLeaguesScore.ViewModels.Team
 {
-    using EuroLeaguesScore.Data.Models;
-    using Microsoft.Extensions.Logging;
     using System.ComponentModel.DataAnnotations;
 
     using static GCommon.EntityValidations;
@@ -26,15 +24,15 @@
 
         public int? ManagerId { get; set; }
 
-        public IEnumerable<Manager> Managers { get; set; } =
-            new HashSet<Manager>();
+        public IEnumerable<ManagerViewModel> Managers { get; set; } =
+            new HashSet<ManagerViewModel>();
 
         [Required]
         public int LeagueId { get; set; }
 
         [Required]
-        public IEnumerable<League> Leagues { get; set; } = 
-            new HashSet<League>();
+        public IEnumerable<LeagueViewModel> Leagues { get; set; } = 
+            new HashSet<LeagueViewModel>();
 
         [Required]
         [Range(MinWinsLossesDraws, MaxWinsLossesDraws, ErrorMessage = WinsLossesDrawsMessage)]
