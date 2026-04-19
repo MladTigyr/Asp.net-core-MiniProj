@@ -16,6 +16,24 @@ namespace EuroLeaguesScore.Data.Repository
         {
         }
 
+        public async Task<IEnumerable<League>> GetAllLeaguesWithTheirTeamsOrderedByLeagueNameAsync()
+        {
+            return await this.GetAllAttached()
+                .AsNoTracking()
+                .Include(l => l.Teams)
+                .OrderBy(l => l.Name)
+                .ToArrayAsync();
+        }
+
+        public async Task<League?> GetLeagueIfExistsWithIdParamAsync(int id)
+        {
+            return await this.GetAllAttached()
+                .AsNoTracking()
+                .Include(l => l.Teams)
+                .ThenInclude(l => l.Players)
+                .FirstOrDefaultAsync(l => l.Id == id);
+        }
+
         public async Task<IEnumerable<League>> GetLeaguesOrderedByLeagueNameAsync()
         {
             return await this.GetAllAttached()

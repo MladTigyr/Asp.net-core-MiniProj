@@ -8,5 +8,9 @@ namespace EuroLeaguesScore.Data.Repository.Contracts
     public interface ILeagueRepository : IRepository<League, int>
     {
         Task<IEnumerable<League>> GetLeaguesOrderedByLeagueNameAsync();
+
+        Task<IEnumerable<League>> GetAllLeaguesWithTheirTeamsOrderedByLeagueNameAsync();
+
+        Task<League?> GetLeagueIfExistsWithIdParamAsync(int id);
     }
 }
