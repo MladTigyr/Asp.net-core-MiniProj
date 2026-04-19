@@ -8,14 +8,23 @@
     using EuroLeaguesScore.ViewModels.Team;
     using EuroLeaguesScore.Data.Models;
     using EuroLeaguesScore.ViewModels.Player;
+    using EuroLeaguesScore.Data.Repository.Contracts;
 
     public class TeamService : ITeamService
     {
-        private readonly EuroLeaguesScoreDbContext dbContext;
+        private readonly ITeamRepository teamRepository;
+        private readonly IFavouriteRepository favouriteRepository;
+        private readonly IManagerRepository managerRepository;
+        private readonly ILeagueRepository leagueRepository;
+        private readonly IPlayerRepository playerRepository;
 
-        public TeamService(EuroLeaguesScoreDbContext dbContext)
+        public TeamService(EuroLeaguesScoreDbContext dbContext, ITeamRepository teamRepository, IFavouriteRepository favouriteRepository, IManagerRepository managerRepository, ILeagueRepository leagueRepository, IPlayerRepository playerRepository)
         {
-            this.dbContext = dbContext;
+            this.teamRepository = teamRepository;
+            this.favouriteRepository = favouriteRepository;
+            this.managerRepository = managerRepository;
+            this.leagueRepository = leagueRepository;
+            this.playerRepository = playerRepository;
         }
 
         public async Task AddTeamToDbAsync(AddTeamInputModel model)
@@ -32,18 +41,15 @@
                 ManagerId = model.ManagerId,
             };
 
-            await dbContext.Teams.AddAsync(team);
-            await dbContext.SaveChangesAsync();
+            await teamRepository.AddAsync(team);
         }
 
         public async Task<IEnumerable<AllTeamViewModel>> AllTeamsOrderedByLeagueNameThenByNameAsync(string? userId)
         {
-            IEnumerable<AllTeamViewModel> models = await dbContext.Teams
-                .AsNoTracking()
-                .Include(t => t.League)
-                .Include(t => t.Manager)
-                .OrderBy(t => t.League.Name)
-                .ThenBy(t => t.Name)
+            IEnumerable<Team> entityTeams = await teamRepository
+                .AllTeamsOrderedByLeagueNameThenByNameAsync();
+
+            IEnumerable<AllTeamViewModel> models = entityTeams
                 .Select(t => new AllTeamViewModel
                 {
                     Id = t.Id,
@@ -56,13 +62,12 @@
                     Draws = t.Draws,
                     ManagerName = t.Manager != null ? t.Manager.Name : "No manager"
                 })
-                .ToArrayAsync();
+                .ToArray();
 
             if (userId != null)
             {
-                IEnumerable<UserTeam> teams = await dbContext.UserTeams
-                .AsNoTracking()
-                .ToArrayAsync();
+                IEnumerable<UserTeam> teams = await favouriteRepository
+                    .GetAllTeamsByUserIdOrderedByLeagueNameThenByTeamNameAsync(userId);
 
                 foreach (var model in models)
                 {
@@ -78,22 +83,24 @@
 
         public async Task<bool> DeleteTeamFromDbAsync(int teamId, DeleteTeamViewModel model)
         {
-            Team? team = await GetTeamByIdTrackingWithoutIncludingAsync(teamId);
+            Team? team = await teamRepository
+                .GetTeamByIdTrackingWithoutIncludingAsync(teamId);
 
             if (team == null)
             {
                 return false;
             }
 
-            dbContext.Teams.Remove(team);
-            await dbContext.SaveChangesAsync();
+            bool isDeleted = await teamRepository
+                .DeleteAsync(team);
 
-            return true;
+            return isDeleted;
         }
 
         public async Task<bool> EditTeamToDbAsync(int teamId, EditTeamInputModel model)
         {
-            Team? team = await GetTeamByIdTrackingAsync(teamId);
+            Team? team = await teamRepository
+                .GetTeamByIdWithItsIncludesTrackingAsync(teamId);
 
             if (team == null)
             {
@@ -109,14 +116,15 @@
             team.LeagueId = model.LeagueId;
             team.ManagerId = model.ManagerId;
 
-            await dbContext.SaveChangesAsync();
+            await teamRepository.SaveChangesAsync();
 
             return true;
         }
 
         public async Task<DeleteTeamViewModel?> GetDeleteTeamViewModelAsync(int teamId)
         {
-            Team? team = await GetTeamByIdTrackingWithoutIncludingAsync(teamId);
+            Team? team = await teamRepository
+                .GetTeamByIdTrackingWithoutIncludingAsync(teamId);
 
             if (team == null) 
             { 
@@ -133,10 +141,10 @@
 
         public async Task<IEnumerable<DetailsPlayerViewModel>> GetDetailsPlayersOrderedByNameWithTeamIdAsync(int teamId)
         {
-            return await dbContext.Players
-                .AsNoTracking()
-                .Where(p => p.TeamId == teamId)
-                .OrderBy(p => p.Name)
+            IEnumerable<Player> entityPlayers = await playerRepository
+                .GetDetailsPlayersOrderedByNameWithTeamIdAsync(teamId);
+
+            IEnumerable<DetailsPlayerViewModel> models = entityPlayers
                 .Select(p => new DetailsPlayerViewModel
                 {
                     Id = p.Id,
@@ -145,13 +153,15 @@
                     Position = p.Position.ToString(),
                     Goals = p.Goals,
                     Assists = p.Assists
-                })
-                .ToArrayAsync();
+                });
+
+            return models;
         }
 
         public async Task<DetailsTeamInputModel?> GetDetailsTeamViewModelAsync(int teamId, string userId)
         {
-            Team? team = await GetTeamByIdAsync(teamId);
+            Team? team = await teamRepository
+                .GetTeamByIdWithItsIncludesAsync(teamId);
 
             if (team == null)
             {
@@ -174,9 +184,8 @@
 
             if (userId != null)
             {
-                IEnumerable<UserTeam> teams = await dbContext.UserTeams
-                    .AsNoTracking()
-                    .ToArrayAsync();
+                IEnumerable<UserTeam> teams = await favouriteRepository
+                    .GetAllTeamsByUserIdOrderedByLeagueNameThenByTeamNameAsync(userId);
 
                 if(teams.Any(t => t.UserId == userId && t.TeamId == model.Id))
                 {
@@ -189,7 +198,8 @@
 
         public async Task<EditTeamInputModel?> GetEditTeamViewModelAsync(int teamId)
         {
-            Team? team = await GetTeamByIdTrackingAsync(teamId);
+            Team? team = await teamRepository
+                .GetTeamByIdWithItsIncludesTrackingAsync(teamId);
 
             if (team == null)
             {
@@ -214,72 +224,51 @@
             return model;
         }
 
-        public async Task<IEnumerable<League>> GetLeaguesOrderedByLeagueNameAsync()
+        public async Task<IEnumerable<LeagueViewModel>> GetLeaguesOrderedByLeagueNameAsync()
         {
-            return await dbContext.Leagues
-               .AsNoTracking()
-               .OrderBy(l => l.Name)
-               .Select(l => new League
-               {
-                   Id = l.Id,
-                   Name = l.Name,
-               })
-               .ToArrayAsync();
+            IEnumerable<League> entityLeagues = await leagueRepository
+                .GetLeaguesOrderedByLeagueNameAsync();
+
+            IEnumerable<LeagueViewModel> models = entityLeagues
+                   .Select(l => new LeagueViewModel
+                   {
+                       Id = l.Id,
+                       Name = l.Name,
+                   });
+
+            return models;
         }
 
-        public async Task<IEnumerable<Manager>> GetManagersWhichHaveNotTeamToManageAsync()
+        public async Task<IEnumerable<ManagerViewModel>> GetManagersWhichHaveNotTeamToManageAsync()
         {
-            return await dbContext.Managers
-                .AsNoTracking()
-                .Where(m => !dbContext.Teams.Any(t => t.ManagerId == m.Id)) // im doing this because i want to show only managers that are not currently managing a team. When i first seeded the db i made sure that all managers are not assigned to a team (i made their teamId null), so this will work fine.
-                .OrderBy(m => m.Name)
-                .Select(m => new Manager
+            IEnumerable<Manager> entityModels = await managerRepository
+                .GetManagersWhichHaveNotTeamToManageAsync();
+
+            IEnumerable<ManagerViewModel> models = entityModels
+                .Select(m => new ManagerViewModel
                 {
                     Id = m.Id,
                     Name = m.Name,
-                    Age = m.Age
-                })
-                .ToArrayAsync();
+                    Age = m.Age,
+                });
+
+            return models;
         }
 
-        public async Task<IEnumerable<Manager>> GetManagersWhichHaveNotTeamToManageOrCurrentTeamManagerAsync(int teamId)
+        public async Task<IEnumerable<ManagerViewModel>> GetManagersWhichHaveNotTeamToManageOrCurrentTeamManagerAsync(int teamId)
         {
-           return await dbContext.Managers
-                    .AsNoTracking()
-                    .Where(m => !dbContext.Teams.Any(t => t.ManagerId == m.Id && t.Id != teamId))
-                    .OrderBy(m => m.Name)
-                    .ToArrayAsync();
-        }
+            IEnumerable<Manager> entityModels = await managerRepository
+                            .GetManagersWhichHaveNotTeamToManageOrCurrentTeamManagerAsync(teamId);
 
-        public async Task<Team?> GetTeamByIdAsync(int teamId)
-        {
-            Team? team = await dbContext.Teams
-                .AsNoTracking()
-                .Include(t => t.League)
-                .Include(t => t.Players)
-                .Include(t => t.Manager)
-                .FirstOrDefaultAsync(t => t.Id == teamId);
+            IEnumerable<ManagerViewModel> models = entityModels
+                .Select(m => new ManagerViewModel
+                {
+                    Id = m.Id,
+                    Name = m.Name,
+                    Age = m.Age,
+                });
 
-            return team;
-        }
-
-        public async Task<Team?> GetTeamByIdTrackingAsync(int teamId)
-        {
-            Team? team = await dbContext.Teams
-                .Include(t => t.League)
-                .Include(t => t.Players)
-                .Include(t => t.Manager)
-                .FirstOrDefaultAsync(t => t.Id == teamId);
-
-            return team;
-        }
-
-        public async Task<Team?> GetTeamByIdTrackingWithoutIncludingAsync(int teamId)
-        {
-            Team? team = await dbContext.Teams
-                .FirstOrDefaultAsync(t => t.Id == teamId);
-
-            return team;
+            return models;
         }
     }
 }
