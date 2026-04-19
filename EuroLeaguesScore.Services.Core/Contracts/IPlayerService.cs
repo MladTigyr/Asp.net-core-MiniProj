@@ -6,22 +6,22 @@ namespace EuroLeaguesScore.Services.Core.Contracts
 
     public interface IPlayerService
     {
-        public Task<IEnumerable<AllPlayersViewModel>> GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync(string? userId);
+        Task<IEnumerable<AllPlayersViewModel>> GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync(string? userId);
 
-        public Task<Player?> GetPlayerWithHisTeamNameIfExistsAsync(int playerId);
+        Task<Player?> GetPlayerWithHisTeamNameIfExistsAsync(int playerId);
 
-        public Task<DetailsPlayerViewModel?> GetDetailsPlayerViewModelAsync(int playerId, string userId);
+        Task<DetailsPlayerViewModel?> GetDetailsPlayerViewModelAsync(int playerId, string userId);
 
-        public Task<IEnumerable<Team>> GetAllTeamsAsync();
+        Task<IEnumerable<Team>> GetAllTeamsAsync();
 
-        public Task AddPlayerToDbAsync(AddPlayerInputModel model);
+        Task AddPlayerToDbAsync(AddPlayerInputModel model);
 
-        public Task<EditPlayerInputModel?> GetEditPlayerInputModelAsync(int playerId);
+        Task<EditPlayerInputModel?> GetEditPlayerInputModelAsync(int playerId);
 
-        public Task<bool> EditPlayerToDbAsync(int playerId, EditPlayerInputModel model);
+        Task<bool> EditPlayerToDbAsync(int playerId, EditPlayerInputModel model);
 
-        public Task<DeletePlayerViewModel?> GetDeletePlayerViewModelAsync(int playerId);
+        Task<DeletePlayerViewModel?> GetDeletePlayerViewModelAsync(int playerId);
 
-        public Task<bool> DeletePlayerFromDbAsync(int playerId);
+        Task<bool> DeletePlayerFromDbAsync(int playerId);
     }
 }

@@ -5,10 +5,10 @@
 
     public interface ILeagueService
     {
-        public Task<IEnumerable<AllLeagueViewModel>> GetAllLeagueViewModelsOrderedByLeagueNameAsync();
+        Task<IEnumerable<AllLeagueViewModel>> GetAllLeagueViewModelsOrderedByLeagueNameAsync();
 
-        public Task<League?> GetLeagueIfExistsWithIdParamAsync(int id);
+        Task<League?> GetLeagueIfExistsWithIdParamAsync(int id);
 
-        public Task<DetailsLeagueViewModel?> GetDetailsLeagueViewModelAsync(int id);
+        Task<DetailsLeagueViewModel?> GetDetailsLeagueViewModelAsync(int id);
     }
 }
