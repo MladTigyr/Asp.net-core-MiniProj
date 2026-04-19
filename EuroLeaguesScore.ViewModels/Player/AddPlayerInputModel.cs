@@ -32,7 +32,7 @@
         public int TeamId { get; set; }
 
         [Required]
-        public IEnumerable<Team> TeamNames { get; set; }
-            = new HashSet<Team>();
+        public IEnumerable<TeamViewModel> TeamNames { get; set; }
+            = new HashSet<TeamViewModel>();
     }
 }

@@ -7,8 +7,6 @@
     {
         Task<IEnumerable<AllLeagueViewModel>> GetAllLeagueViewModelsOrderedByLeagueNameAsync();
 
-        Task<League?> GetLeagueIfExistsWithIdParamAsync(int id);
-
         Task<DetailsLeagueViewModel?> GetDetailsLeagueViewModelAsync(int id);
     }
 }

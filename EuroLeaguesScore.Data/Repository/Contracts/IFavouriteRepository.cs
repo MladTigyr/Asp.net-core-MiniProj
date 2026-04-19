@@ -5,5 +5,7 @@
     public interface IFavouriteRepository : IRepository<UserTeam, string>
     {
         Task<IEnumerable<UserTeam>> GetAllTeamsByUserIdOrderedByLeagueNameThenByTeamNameAsync(string userId);
+
+        Task OnlyDeleteAsync(UserTeam userTeam);
     }
 }

@@ -8,11 +8,9 @@ namespace EuroLeaguesScore.Services.Core.Contracts
     {
         Task<IEnumerable<AllPlayersViewModel>> GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync(string? userId);
 
-        Task<Player?> GetPlayerWithHisTeamNameIfExistsAsync(int playerId);
-
         Task<DetailsPlayerViewModel?> GetDetailsPlayerViewModelAsync(int playerId, string userId);
 
-        Task<IEnumerable<Team>> GetAllTeamsAsync();
+        Task<IEnumerable<TeamViewModel>> GetAllTeamsAsync();
 
         Task AddPlayerToDbAsync(AddPlayerInputModel model);
 

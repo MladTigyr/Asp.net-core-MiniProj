@@ -18,6 +18,14 @@ namespace EuroLeaguesScore.Data.Repository
             this.context = dbContext;
         }
 
+        public async Task<IEnumerable<Manager>> GetAllManagersWithTheirTeamAsync()
+        {
+            return await this.GetAllAttached()
+                .AsNoTracking()
+                .OrderBy(m => m.Name)
+                .ToArrayAsync();
+        }
+
         public async Task<IEnumerable<Manager>> GetManagersWhichHaveNotTeamToManageAsync()
         {
             return await this.GetAllAttached()

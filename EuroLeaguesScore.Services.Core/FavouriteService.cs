@@ -2,6 +2,7 @@
 {
     using EuroLeaguesScore.Data;
     using EuroLeaguesScore.Data.Models;
+    using EuroLeaguesScore.Data.Repository.Contracts;
     using EuroLeaguesScore.Services.Core.Contracts;
     using EuroLeaguesScore.ViewModels.Favourite;
     using Microsoft.EntityFrameworkCore;
@@ -10,53 +11,57 @@
 
     public class FavouriteService : IFavouriteService
     {
-        private readonly EuroLeaguesScoreDbContext dbContext;
+        private readonly IFavouriteRepository favouriteRepository;
+        private readonly IUserPlayerRepository userPlayerRepository;
 
-        public FavouriteService(EuroLeaguesScoreDbContext dbContext)
+        public FavouriteService(IFavouriteRepository favouriteRepository, IUserPlayerRepository userPlayerRepository)
         {
-            this.dbContext = dbContext;
+            this.favouriteRepository = favouriteRepository;
+            this.userPlayerRepository = userPlayerRepository;
         }
 
         public async Task<IEnumerable<FavouritePlayerViewModel>?> GetAllFavPlayersIfExistAsync(string userId)
         {
-            return await dbContext.UserPlayers
-                .AsNoTracking()
-                .Where(u => u.UserId == userId)
-                .OrderBy(u => u.Player.Name)
+            IEnumerable<UserPlayer> entityUserPlayers = await userPlayerRepository
+                .GetAllFavPlayersOrderedByPlayerNameWithUserIdParamAsync(userId);
+
+            IEnumerable<FavouritePlayerViewModel> models = entityUserPlayers
                 .Select(u => new FavouritePlayerViewModel
                 {
                     Id = u.Player.Id,
                     Name = u.Player.Name,
-                    Age = u.Player.Age,
-                })
-                .ToArrayAsync();
+                    Age = u.Player.Age
+                });
+
+            return models;
         }
 
         public async Task<IEnumerable<FavouriteTeamViewModel>?> GetAllFavTeamsIfExistAsync(string userId)
         {
-            return await dbContext.UserTeams
-                .AsNoTracking()
-                .Where(u => u.UserId == userId)
-                .OrderBy(t => t.Team.League.Name)
-                .ThenBy(t => t.Team.Name)
+            IEnumerable<UserTeam> entityUserTeams = await favouriteRepository
+                .GetAllTeamsByUserIdOrderedByLeagueNameThenByTeamNameAsync(userId);
+
+            IEnumerable<FavouriteTeamViewModel> models = entityUserTeams
                 .Select(u => new FavouriteTeamViewModel
                 {
                     Id = u.TeamId,
                     Name = u.Team.Name,
                     Country = u.Team.Country,
                     LeagueName = u.Team.League.Name,
-                })
-                .ToArrayAsync();
+                });
+
+            return models;
         }
 
         public async Task TogglePlayerFavouriteAsync(string userId, int playerId)
         {
-            UserPlayer? player = await dbContext.UserPlayers
-                .FirstOrDefaultAsync(up => up.UserId == userId && up.PlayerId == playerId);
+            UserPlayer? player = await userPlayerRepository
+                .FirstOrDefaultAsync(up => up.UserId == userId && up.PlayerId.ToString() == playerId.ToString());
 
             if (player != null)
             {
-                dbContext.UserPlayers.Remove(player);
+                await userPlayerRepository
+                    .OnlyDeleteAsync(player);
             }
             else
             {
@@ -66,20 +71,19 @@
                     PlayerId = playerId
                 };
 
-                await dbContext.UserPlayers.AddAsync(userPlayer);
+                await userPlayerRepository.AddAsync(userPlayer);
             }
-
-            await dbContext.SaveChangesAsync();
         }
 
         public async Task ToggleTeamFavouriteAsync(string userId, int teamId)
         {
-            UserTeam? favourtieTeam = await dbContext.UserTeams
-                .FirstOrDefaultAsync(u => u.UserId == userId && u.TeamId == teamId);
+            UserTeam? favourtieTeam = await favouriteRepository
+                .FirstOrDefaultAsync(ut => ut.UserId == userId && ut.TeamId.ToString() == teamId.ToString());
 
             if (favourtieTeam != null)
             {
-                dbContext.UserTeams.Remove(favourtieTeam);
+                await favouriteRepository
+                    .OnlyDeleteAsync(favourtieTeam);
             }
             else
             {
@@ -89,10 +93,8 @@
                     TeamId = teamId
                 };
 
-                await dbContext.AddAsync(userTeam);
+                await favouriteRepository.AddAsync(userTeam);
             }
-
-            await dbContext.SaveChangesAsync();
         }
     }
 }

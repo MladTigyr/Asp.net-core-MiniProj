@@ -16,6 +16,18 @@ namespace EuroLeaguesScore.Data.Repository
         {
         }
 
+        public async Task<IEnumerable<Player>> GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync()
+        {
+            return await this.GetAllAttached()
+                .AsNoTracking()
+                .Include(p => p.Team)
+                .ThenInclude(p => p.League)
+                .OrderBy(p => p.Team.League.Name)
+                .ThenBy(p => p.Team.Name)
+                .ThenBy(p => p.Name)
+                .ToArrayAsync();
+        }
+
         public async Task<IEnumerable<Player>> GetDetailsPlayersOrderedByNameWithTeamIdAsync(int teamId)
         {
             return await this.GetAllAttached()
@@ -23,6 +35,13 @@ namespace EuroLeaguesScore.Data.Repository
                 .Where(p => p.TeamId == teamId)
                 .OrderBy(p => p.Name)
                 .ToArrayAsync();
+        }
+
+        public async Task<Player?> GetPlayerWithHisTeamIfExistsAsync(int id)
+        {
+            return await this.GetAllAttached()
+                .Include(p => p.Team)
+                .FirstOrDefaultAsync(p => p.Id == id);
         }
     }
 }

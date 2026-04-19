@@ -1,20 +1,21 @@
 ﻿namespace EuroLeaguesScore.Services.Core
 {
-    using EuroLeaguesScore.Data;
     using EuroLeaguesScore.Data.Models;
+    using EuroLeaguesScore.Data.Repository.Contracts;
     using EuroLeaguesScore.Services.Core.Contracts;
     using EuroLeaguesScore.ViewModels.Manager;
-    using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public class ManagerService : IManagerService
     {
-        private readonly EuroLeaguesScoreDbContext dbContext;
+        private readonly IManagerRepository managerRepository;
+        private readonly ITeamRepository teamRepository;
 
-        public ManagerService(EuroLeaguesScoreDbContext dbContext)
+        public ManagerService(IManagerRepository managerRepository, ITeamRepository teamRepository)
         {
-            this.dbContext = dbContext;
+            this.managerRepository = managerRepository;
+            this.teamRepository = teamRepository;
         }
 
         public async Task AddManagerToDbAsync(AddManagerInputModel model)
@@ -26,8 +27,7 @@
                 TeamId = model.TeamId,
             };
 
-            await dbContext.AddAsync(manager);
-            await dbContext.SaveChangesAsync();
+            await managerRepository.AddAsync(manager);
         }
 
         public async Task<bool> DeleteManagerFromDbAsync(int id)
@@ -39,10 +39,10 @@
                 return false;
             }
 
-            dbContext.Remove(manager);
-            await dbContext.SaveChangesAsync();
+            bool isDeleted = await managerRepository
+                .DeleteAsync(manager);
 
-            return true;
+            return isDeleted;
         }
 
         public async Task<DeleteManagerViewModel?> DeleteManagerViewModelAsync(int id)
@@ -75,23 +75,24 @@
             manager.Name = model.Name;
             manager.Age = model.Age;
             manager.TeamId = model.TeamId;
-            await dbContext.SaveChangesAsync();
+
+            await managerRepository.SaveChangesAsync();
 
             return true;
         }
 
         public async Task<IEnumerable<AllManagerViewModel>> GetAllManagersWithTheirTeamIfTheyHaveAsync()
         {
-            IEnumerable<AllManagerViewModel> models = await dbContext.Managers
-                .AsNoTracking()
-                .OrderBy(m => m.Name)
+            IEnumerable<Manager> entityManagers = await managerRepository
+                .GetAllManagersWithTheirTeamAsync();
+
+            IEnumerable<AllManagerViewModel> models = entityManagers
                 .Select(m => new AllManagerViewModel
                 {
                     Id = m.Id,
                     Name = m.Name,
                     Age = m.Age,
-                })
-                .ToArrayAsync();
+                });
 
             return models;
         }
@@ -105,9 +106,8 @@
                 return null;
             }
 
-            Team? teamWithCurrManager = await dbContext.Teams
-                .Include(t => t.League)
-                .FirstOrDefaultAsync(m => m.Manager.Id == manager.Id);
+            Team? teamWithCurrManager = await teamRepository
+                .TeamWithCurrentManager(manager.Id);
 
             DetailsManagerViewModel model = new DetailsManagerViewModel
             {
@@ -143,21 +143,21 @@
 
         public async Task<Manager?> GetManagerIfExistsAsync(int id)
         {
-            return await dbContext.Managers
+            return await managerRepository
                 .FirstOrDefaultAsync(m => m.Id == id);
         }
 
         public async Task<IEnumerable<TeamInputModel>> GetTeamInputModelAsync()
         {
-            return await dbContext.Teams
-                .OrderBy(t => t.Name)
-                .Where(t => t.Manager == null)
+            IEnumerable<Team> entityTeams = await teamRepository
+                .GetTeamsWithNoManagerAsync();
+
+            return entityTeams
                 .Select(t => new TeamInputModel
                 {
                     Id = t.Id,
                     Name = t.Name,
-                })
-                .ToArrayAsync();
+                });
         }
     }
 }
