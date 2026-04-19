@@ -40,6 +40,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(AddTeamInputModel model)
         {
             model.Leagues = await teamService.GetLeaguesOrderedByLeagueNameAsync();
@@ -103,6 +104,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EditTeamInputModel model)
         {
             if (id <= 0)
@@ -156,6 +158,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id, DeleteTeamViewModel model)
         {
             if (id <= 0)

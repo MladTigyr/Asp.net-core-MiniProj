@@ -69,6 +69,7 @@
                                   asp-action="AddOrRemovePlayer"
                                   method="post"
                                   class="d-inline">
+                                  @Html.AntiForgeryToken()
                                 <input type="hidden" name="playerId" value="@Model.Id" />
                                 <button type="submit" class="btn btn-outline-warning">
                                     <i class="bi bi-star me-1"></i>Add to Favourites

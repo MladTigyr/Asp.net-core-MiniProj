@@ -86,6 +86,7 @@ else
                                   asp-action="AddOrRemovePlayer"
                                   method="post"
                                   class="flex-grow-1">
+                                  @Html.AntiForgeryToken()
 
                                 <input type="hidden" name="playerId" value="@player.Id" />
 
