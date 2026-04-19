@@ -7,5 +7,7 @@
         Task<IEnumerable<Manager>> GetManagersWhichHaveNotTeamToManageAsync();
 
         Task<IEnumerable<Manager>> GetManagersWhichHaveNotTeamToManageOrCurrentTeamManagerAsync(int teamId);
+
+        Task<IEnumerable<Manager>> GetAllManagersWithTheirTeamAsync();
     }
 }

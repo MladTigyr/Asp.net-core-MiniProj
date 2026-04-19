@@ -52,5 +52,20 @@
                 .Include(t => t.Manager)
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
+
+        public async Task<IEnumerable<Team>> GetTeamsWithNoManagerAsync()
+        {
+            return await this.GetAllAttached()
+                .OrderBy(t => t.Name)
+                .Where(t => t.Manager == null)
+                .ToArrayAsync();
+        }
+
+        public async Task<Team?> TeamWithCurrentManager(int managerId)
+        {
+            return await this.GetAllAttached()
+                .Include(t => t.League)
+                .FirstOrDefaultAsync(m => m.Manager!.Id == managerId);
+        }
     }
 }
