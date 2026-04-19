@@ -39,6 +39,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(AddManagerInputModel model)
         {
             model.TeamNames = await managerService
@@ -104,6 +105,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EditManagerInputModel model)
         {
             model.TeamNames = await managerService
@@ -159,6 +161,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id, DeleteManagerViewModel model)
         {
             if (id <= 0)

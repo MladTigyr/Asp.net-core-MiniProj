@@ -24,6 +24,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ToggleTeam(int teamId)
         {
             if (teamId <= 0)
@@ -40,6 +41,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddOrRemoveTeam(int teamId)
         {
             if (teamId <= 0)
@@ -56,6 +58,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> TogglePlayer(int playerId)
         {
             if (playerId <= 0)
@@ -81,6 +84,7 @@
         } 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddOrRemovePlayer(int playerId)
         {
             if (playerId <= 0)

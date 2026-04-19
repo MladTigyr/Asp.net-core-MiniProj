@@ -91,6 +91,7 @@ else
                                   asp-action="AddOrRemoveTeam"
                                   method="post"
                                   class="flex-grow-1">
+                                  @Html.AntiForgeryToken()
 
                                 <input type="hidden" name="teamId" value="@team.Id" />
 

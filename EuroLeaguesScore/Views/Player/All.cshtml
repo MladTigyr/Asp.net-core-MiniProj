@@ -67,6 +67,7 @@
                                         <form asp-controller="Favourite"
                                               asp-action="TogglePlayer"
                                               method="post">
+                                              @Html.AntiForgeryToken()
 
                                             <input type="hidden" name="playerId" value="@player.Id" />
 

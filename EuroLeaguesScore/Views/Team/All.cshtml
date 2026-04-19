@@ -47,6 +47,7 @@
                                       asp-action="ToggleTeam"
                                       method="post"
                                       class="ms-2">
+                                      @Html.AntiForgeryToken()
                                     <input type="hidden" name="teamId" value="@team.Id" />
 
                                     <button type="submit"
