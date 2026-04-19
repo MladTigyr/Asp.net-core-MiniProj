@@ -1,43 +1,43 @@
 ﻿namespace EuroLeaguesScore.Services.Core
 {
-    using EuroLeaguesScore.Data;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+
+    using EuroLeaguesScore.Data.Repository.Contracts;
     using EuroLeaguesScore.Data.Models;
     using EuroLeaguesScore.Services.Core.Contracts;
     using EuroLeaguesScore.ViewModels.League;
     using ViewModels.Team;
-    using Microsoft.EntityFrameworkCore;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
 
     public class LeagueService : ILeagueService
     {
-        private readonly EuroLeaguesScoreDbContext dbContext;
+        private readonly ILeagueRepository leagueRepository;
 
-        public LeagueService(EuroLeaguesScoreDbContext dbContext)
+        public LeagueService(ILeagueRepository leagueRepository)
         {
-            this.dbContext = dbContext;
+            this.leagueRepository = leagueRepository;
         }
 
         public async Task<IEnumerable<AllLeagueViewModel>> GetAllLeagueViewModelsOrderedByLeagueNameAsync()
         {
-            IEnumerable<AllLeagueViewModel> models = await dbContext.Leagues
-                .AsNoTracking()
-                .Include(l => l.Teams)
-                .OrderBy(l => l.Name)
+            IEnumerable<League> entityLeagues = await leagueRepository
+                .GetAllLeaguesWithTheirTeamsOrderedByLeagueNameAsync();
+
+            IEnumerable<AllLeagueViewModel> models = entityLeagues
                 .Select(l => new AllLeagueViewModel
                 {
                     Id = l.Id,
                     Name = l.Name,
                     Country = l.Teams.Select(t => t.Country).FirstOrDefault() ?? "Unknown"
-                })
-                .ToArrayAsync();
+                });
 
             return models;
         }
 
         public async Task<DetailsLeagueViewModel?> GetDetailsLeagueViewModelAsync(int id)
         {
-            League? league = await GetLeagueIfExistsWithIdParamAsync(id);
+            League? league = await leagueRepository
+                .GetLeagueIfExistsWithIdParamAsync(id);
 
             if (league == null)
             {
@@ -66,15 +66,6 @@
             };
 
             return model;
-        }
-
-        public async Task<League?> GetLeagueIfExistsWithIdParamAsync(int id)
-        {
-            return await dbContext.Leagues
-                .AsNoTracking()
-                .Include(l => l.Teams)
-                .ThenInclude(l => l.Players)
-                .FirstOrDefaultAsync(l => l.Id == id);
         }
     }
 }
