@@ -1,7 +1,6 @@
 ﻿namespace EuroLeaguesScore.Services.Core
 {
     using System.Threading.Tasks;
-    using Microsoft.EntityFrameworkCore;
 
     using EuroLeaguesScore.Data;
     using EuroLeaguesScore.Services.Core.Contracts;

@@ -1,20 +1,24 @@
 ﻿
 namespace EuroLeaguesScore.Services.Core
 {
-    using EuroLeaguesScore.Data;
+    using System.Threading.Tasks;
+
     using EuroLeaguesScore.Data.Models;
+    using EuroLeaguesScore.Data.Repository.Contracts;
     using EuroLeaguesScore.Services.Core.Contracts;
     using EuroLeaguesScore.ViewModels.Player;
-    using Microsoft.EntityFrameworkCore;
-    using System.Threading.Tasks;
 
     public class PlayerService : IPlayerService
     {
-        private readonly EuroLeaguesScoreDbContext dbContext;
+        private readonly IPlayerRepository playerRepository;
+        private readonly IUserPlayerRepository userPlayerRepository;
+        private readonly ITeamRepository teamRepository;
 
-        public PlayerService(EuroLeaguesScoreDbContext dbContext)
+        public PlayerService(IPlayerRepository playerRepository, IUserPlayerRepository userPlayerRepository, ITeamRepository teamRepository)
         {
-            this.dbContext = dbContext;
+            this.playerRepository = playerRepository;
+            this.userPlayerRepository = userPlayerRepository;
+            this.teamRepository = teamRepository;
         }
 
         public async Task AddPlayerToDbAsync(AddPlayerInputModel model)
@@ -29,28 +33,29 @@ namespace EuroLeaguesScore.Services.Core
                 TeamId = model.TeamId,
             };
 
-            await dbContext.AddAsync(player);
-            await dbContext.SaveChangesAsync();
+            await playerRepository.AddAsync(player);
         }
 
         public async Task<bool> DeletePlayerFromDbAsync(int playerId)
         {
-            Player? player = await GetPlayerWithHisTeamNameIfExistsAsync(playerId);
+            Player? player = await playerRepository
+                .GetPlayerWithHisTeamIfExistsAsync(playerId);
 
             if (player == null)
             {
                 return false;
             }
 
-            dbContext.Remove(player);
-            await dbContext.SaveChangesAsync();
+            bool isDeleted = await playerRepository
+                .DeleteAsync(player);
 
-            return true;
+            return isDeleted;
         }
 
         public async Task<bool> EditPlayerToDbAsync(int playerId, EditPlayerInputModel model)
         {
-            Player? player = await GetPlayerWithHisTeamNameIfExistsAsync(playerId);
+            Player? player = await playerRepository
+                .GetPlayerWithHisTeamIfExistsAsync(playerId);
 
             if (player == null)
             {
@@ -64,20 +69,18 @@ namespace EuroLeaguesScore.Services.Core
             player.Position = model.Position;
             player.TeamId = model.TeamId;
 
-            await dbContext.SaveChangesAsync();
+            await playerRepository
+                .SaveChangesAsync();
 
             return true;
         }
 
         public async Task<IEnumerable<AllPlayersViewModel>> GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync(string? userId)
         {
-            IEnumerable<AllPlayersViewModel> models = await dbContext.Players
-                .AsNoTracking()
-                .Include(p => p.Team)
-                .ThenInclude(p => p.League)
-                .OrderBy(p => p.Team.League.Name)
-                .ThenBy(p => p.Team.Name)
-                .ThenBy(p => p.Name)
+            IEnumerable<Player> entityPlayers = await playerRepository
+                .GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync();
+
+            IEnumerable<AllPlayersViewModel> models = entityPlayers
                 .Select(p => new AllPlayersViewModel
                 {
                     Id = p.Id,
@@ -90,14 +93,12 @@ namespace EuroLeaguesScore.Services.Core
                     TeamName = p.Team.Name,
                     LeagueId = p.Team.League.Id,
                     LeagueName = p.Team.League.Name,
-                })
-                .ToArrayAsync();
+                });
 
             if (userId != null)
             {
-                IEnumerable<UserPlayer> players = await dbContext.UserPlayers
-                    .Where(up => up.UserId == userId)
-                    .ToArrayAsync();
+                IEnumerable<UserPlayer> players = await userPlayerRepository
+                    .GetAllFavPlayersWithUserIdParamAsync(userId);
 
                 if (players.Any())
                 {
@@ -114,20 +115,23 @@ namespace EuroLeaguesScore.Services.Core
             return models;
         }
 
-        public async Task<IEnumerable<Team>> GetAllTeamsAsync()
+        public async Task<IEnumerable<TeamViewModel>> GetAllTeamsAsync()
         {
-            return await dbContext.Teams
-                .Select(t => new Team
+            IEnumerable<Team> teams = await teamRepository
+                .GetAllAsync();
+
+            return teams
+                .Select(t => new TeamViewModel
                 {
                     Id = t.Id,
-                    Name = t.Name,
-                })
-                .ToArrayAsync();
+                    TeamName = t.Name,
+                });
         }
 
         public async Task<DeletePlayerViewModel?> GetDeletePlayerViewModelAsync(int playerId)
         {
-            Player? player = await GetPlayerWithHisTeamNameIfExistsAsync(playerId);
+            Player? player = await playerRepository
+                .GetPlayerWithHisTeamIfExistsAsync(playerId);
 
             if (player == null)
             {
@@ -144,7 +148,8 @@ namespace EuroLeaguesScore.Services.Core
 
         public async Task<DetailsPlayerViewModel?> GetDetailsPlayerViewModelAsync(int playerId, string userId)
         {
-            Player? player = await GetPlayerWithHisTeamNameIfExistsAsync(playerId);
+            Player? player = await playerRepository
+                .GetPlayerWithHisTeamIfExistsAsync(playerId);
 
             if (player == null)
             {
@@ -165,9 +170,8 @@ namespace EuroLeaguesScore.Services.Core
 
             if (userId != null)
             {
-                IEnumerable<UserPlayer> userPlayers = await dbContext.UserPlayers
-                    .Where(up => up.UserId == userId)
-                    .ToArrayAsync();
+                IEnumerable<UserPlayer> userPlayers = await userPlayerRepository
+                    .GetAllFavPlayersWithUserIdParamAsync(userId);
 
                 if (userPlayers.Any(up => up.UserId == userId && up.PlayerId == detailsPlayerViewModel.Id))
                 {
@@ -180,7 +184,8 @@ namespace EuroLeaguesScore.Services.Core
 
         public async Task<EditPlayerInputModel?> GetEditPlayerInputModelAsync(int playerId)
         {
-            Player? player = await GetPlayerWithHisTeamNameIfExistsAsync(playerId);
+            Player? player = await playerRepository
+                .GetPlayerWithHisTeamIfExistsAsync(playerId);
 
             if (player == null)
             {
@@ -200,13 +205,6 @@ namespace EuroLeaguesScore.Services.Core
             };
 
             return model;
-        }
-
-        public async Task<Player?> GetPlayerWithHisTeamNameIfExistsAsync(int playerId)
-        {
-            return await dbContext.Players
-                .Include(p => p.Team)
-                .FirstOrDefaultAsync(p => p.Id == playerId);
         }
     }
 }
