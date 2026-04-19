@@ -93,7 +93,8 @@ namespace EuroLeaguesScore.Services.Core
                     TeamName = p.Team.Name,
                     LeagueId = p.Team.League.Id,
                     LeagueName = p.Team.League.Name,
-                });
+                })
+                .ToArray();
 
             if (userId != null)
             {
