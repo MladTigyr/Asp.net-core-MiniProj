@@ -22,7 +22,7 @@ namespace EuroLeaguesScore.Data.Repository
                 .AsNoTracking()
                 .Include(ut => ut.Team)
                 .ThenInclude(t => t.League)
-                .Where(ut => ut.UserId == userId)
+                .Where(ut => ut.UserId.ToString() == userId)
                 .OrderBy(ut => ut.Team.League.Name)
                 .ThenBy(ut => ut.Team.Name)
                 .ToArrayAsync();

@@ -20,7 +20,7 @@
             return await this.GetAllAttached()
                 .AsNoTracking()
                 .Include(up => up.Player)
-                .Where(up => up.UserId == userId)
+                .Where(up => up.UserId.ToString() == userId)
                 .OrderBy(up => up.Player.Name)
                 .ToArrayAsync();
         }
@@ -29,7 +29,7 @@
         {
             return await this.GetAllAttached()
                 .Include(up => up.Player)
-                .Where(x => x.UserId == userId)
+                .Where(x => x.UserId.ToString() == userId)
                 .ToArrayAsync();
         }
 
