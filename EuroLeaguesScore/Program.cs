@@ -38,6 +38,7 @@ namespace EuroLeaguesScore
             builder.Services.AddScoped<IFavouriteService, FavouriteService>();
 
             builder.Services.AddTransient<IIdentitySeeder, IdentitySeeder>();
+            builder.Services.AddTransient<IAdminSeeder, AdminSeeder>();
 
             builder.Services.AddDefaultIdentity<ApplicationUser>(options => {
                 ConfigureIdentity(options, builder);
@@ -70,8 +71,13 @@ namespace EuroLeaguesScore
             app.UseAuthorization();
 
             app.UseRolesSeeder();
+            app.UseAdminSeeder();
 
             app.UseStatusCodePagesWithRedirects("/Home/Error/{0}");
+
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
             app.MapControllerRoute(
                 name: "default",
