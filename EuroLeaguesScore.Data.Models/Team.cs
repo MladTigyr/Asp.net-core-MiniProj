@@ -40,5 +40,8 @@
         public virtual ICollection<Player> Players { get; set; } 
             = new HashSet<Player>();
 
+        public ICollection<UserTeam> UserTeams { get; set; }
+            = new List<UserTeam>();
+
     }
 }

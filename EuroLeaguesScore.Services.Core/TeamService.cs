@@ -70,7 +70,7 @@
 
                 foreach (var model in models)
                 {
-                    if (teams.Any(t => t.TeamId == model.Id && t.UserId == userId))
+                    if (teams.Any(t => t.TeamId == model.Id && t.UserId.ToString() == userId))
                     {
                         model.IsFavourite = true;
                     }
@@ -186,7 +186,7 @@
                 IEnumerable<UserTeam> teams = await favouriteRepository
                     .GetAllTeamsByUserIdOrderedByLeagueNameThenByTeamNameAsync(userId);
 
-                if(teams.Any(t => t.UserId == userId && t.TeamId == model.Id))
+                if(teams.Any(t => t.UserId.ToString() == userId && t.TeamId == model.Id))
                 {
                     model.IsFavourite = true;
                 }

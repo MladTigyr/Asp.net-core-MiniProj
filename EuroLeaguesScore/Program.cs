@@ -1,10 +1,14 @@
 namespace EuroLeaguesScore
 {
     using EuroLeaguesScore.Data;
+    using EuroLeaguesScore.Data.Models;
     using EuroLeaguesScore.Data.Repository;
     using EuroLeaguesScore.Data.Repository.Contracts;
+    using EuroLeaguesScore.Data.Seeding;
+    using EuroLeaguesScore.Data.Seeding.Contracts;
     using EuroLeaguesScore.Services.Core;
     using EuroLeaguesScore.Services.Core.Contracts;
+    using EuroLeaguesScore.Web.Infrastructure.Extensions;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
@@ -33,9 +37,15 @@ namespace EuroLeaguesScore
             builder.Services.AddScoped<IManagerService, ManagerService>();
             builder.Services.AddScoped<IFavouriteService, FavouriteService>();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => {
+            builder.Services.AddTransient<IIdentitySeeder, IdentitySeeder>();
+            builder.Services.AddTransient<IAdminSeeder, AdminSeeder>();
+
+            builder.Services.AddDefaultIdentity<ApplicationUser>(options => {
                 ConfigureIdentity(options, builder);
-                }).AddEntityFrameworkStores<EuroLeaguesScoreDbContext>();
+            })
+            .AddRoles<IdentityRole<Guid>>()
+            .AddRoleManager<RoleManager<IdentityRole<Guid>>>()
+            .AddEntityFrameworkStores<EuroLeaguesScoreDbContext>();
             builder.Services.AddControllersWithViews();
 
             WebApplication app = builder.Build();
@@ -60,7 +70,14 @@ namespace EuroLeaguesScore
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseRolesSeeder();
+            app.UseAdminSeeder();
+
             app.UseStatusCodePagesWithRedirects("/Home/Error/{0}");
+
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
             app.MapControllerRoute(
                 name: "default",

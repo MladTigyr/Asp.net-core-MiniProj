@@ -56,7 +56,7 @@
         public async Task TogglePlayerFavouriteAsync(string userId, int playerId)
         {
             UserPlayer? player = await userPlayerRepository
-                .FirstOrDefaultAsync(up => up.UserId == userId && up.PlayerId.ToString() == playerId.ToString());
+                .FirstOrDefaultAsync(up => up.UserId.ToString() == userId && up.PlayerId.ToString() == playerId.ToString());
 
             if (player != null)
             {
@@ -67,7 +67,7 @@
             {
                 UserPlayer userPlayer = new UserPlayer
                 {
-                    UserId = userId,
+                    UserId = Guid.Parse(userId),
                     PlayerId = playerId
                 };
 
@@ -78,7 +78,7 @@
         public async Task ToggleTeamFavouriteAsync(string userId, int teamId)
         {
             UserTeam? favourtieTeam = await favouriteRepository
-                .FirstOrDefaultAsync(ut => ut.UserId == userId && ut.TeamId.ToString() == teamId.ToString());
+                .FirstOrDefaultAsync(ut => ut.UserId.ToString() == userId && ut.TeamId.ToString() == teamId.ToString());
 
             if (favourtieTeam != null)
             {
@@ -89,7 +89,7 @@
             {
                 UserTeam userTeam = new UserTeam
                 {
-                    UserId = userId,
+                    UserId = Guid.Parse(userId),
                     TeamId = teamId
                 };
 

@@ -105,7 +105,7 @@ namespace EuroLeaguesScore.Services.Core
                 {
                     foreach (AllPlayersViewModel model in models)
                     {
-                        if (players.Any(up => up.UserId == userId && up.PlayerId == model.Id))
+                        if (players.Any(up => up.UserId.ToString() == userId && up.PlayerId == model.Id))
                         {
                             model.IsFavourite = true;
                         }
@@ -174,7 +174,7 @@ namespace EuroLeaguesScore.Services.Core
                 IEnumerable<UserPlayer> userPlayers = await userPlayerRepository
                     .GetAllFavPlayersWithUserIdParamAsync(userId);
 
-                if (userPlayers.Any(up => up.UserId == userId && up.PlayerId == detailsPlayerViewModel.Id))
+                if (userPlayers.Any(up => up.UserId.ToString() == userId && up.PlayerId == detailsPlayerViewModel.Id))
                 {
                     detailsPlayerViewModel.IsFavourite = true;
                 }

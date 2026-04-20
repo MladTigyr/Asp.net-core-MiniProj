@@ -26,5 +26,8 @@
 
         [ForeignKey(nameof(TeamId))]
         public virtual Team Team { get; set; } = null!;
+
+        public virtual ICollection<UserPlayer> UserPlayers { get; set; } 
+            = new List<UserPlayer>();
     }
 }
