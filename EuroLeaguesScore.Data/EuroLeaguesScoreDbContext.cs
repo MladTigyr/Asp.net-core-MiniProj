@@ -4,8 +4,9 @@
     using Microsoft.EntityFrameworkCore;
 
     using Data.Models;
+    using Microsoft.AspNetCore.Identity;
 
-    public class EuroLeaguesScoreDbContext : IdentityDbContext
+    public class EuroLeaguesScoreDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {
         public EuroLeaguesScoreDbContext(DbContextOptions<EuroLeaguesScoreDbContext> options)
             : base(options)
