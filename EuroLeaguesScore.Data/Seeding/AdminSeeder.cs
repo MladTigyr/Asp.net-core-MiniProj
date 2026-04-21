@@ -7,37 +7,40 @@
     using EuroLeaguesScore.Data.Seeding.Contracts;
 
     using static GCommon.ExceptionMessages;
+    using Microsoft.Extensions.Configuration;
 
     public class AdminSeeder : IAdminSeeder
     {
-        private readonly string userName = "admin";
-        private readonly string email = "admin@gmail.com";
-        private readonly string password = "1234567";
-
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IConfiguration configuration;
 
-        public AdminSeeder(UserManager<ApplicationUser> userManager)
+        public AdminSeeder(UserManager<ApplicationUser> userManager, IConfiguration configuration)
         {
             this.userManager = userManager;
+            this.configuration = configuration;
         }
 
         public async Task AssignAdminAsync()
         {
+            string userName = configuration["AdminSettings:UserName"] ?? "admin";
+            string userEmail = configuration["AdminSettings:Email"] ?? "admin@gmail.com";
+            string userPassword = configuration["AdminSettings:Password"] ?? "1234567";
+
             ApplicationUser? adminUser = await userManager
-                .FindByEmailAsync(email);
+                .FindByEmailAsync(userEmail);
 
             if (adminUser == null)
             {
                 adminUser = new ApplicationUser
                 {
                     UserName = userName,
-                    Email = email,
+                    Email = userEmail,
                     NormalizedUserName = userName.ToUpper(),
-                    NormalizedEmail = email.ToUpper()
+                    NormalizedEmail = userEmail.ToUpper()
                 };
 
                 IdentityResult createUserResult = await userManager
-                    .CreateAsync(adminUser, password);
+                    .CreateAsync(adminUser, userPassword);
 
                 if (!createUserResult.Succeeded)
                 {

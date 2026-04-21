@@ -55,13 +55,16 @@
                 <div class="d-flex gap-2 flex-wrap">
                     @if (User.Identity?.IsAuthenticated ?? false)
                     {
-                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">
-                            <i class="bi bi-pencil-square me-1"></i>Edit Player
-                        </a>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">
+                                <i class="bi bi-pencil-square me-1"></i>Edit Player
+                            </a>
 
-                        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">
-                            <i class="bi bi-trash me-1"></i>Delete Player
-                        </a>
+                            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">
+                                <i class="bi bi-trash me-1"></i>Delete Player
+                            </a>
+                        }
 
                         @if (!Model.IsFavourite)
                         {

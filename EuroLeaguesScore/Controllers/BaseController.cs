@@ -5,6 +5,7 @@
     using System.Security.Claims;
 
     [Authorize]
+    [AutoValidateAntiforgeryToken]
     public class BaseController : Controller
     {
         public IActionResult Index()

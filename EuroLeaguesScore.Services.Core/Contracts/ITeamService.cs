@@ -1,6 +1,5 @@
 ﻿namespace EuroLeaguesScore.Services.Core.Contracts
 {
-    using EuroLeaguesScore.Data.Models;
     using EuroLeaguesScore.ViewModels.Player;
     using EuroLeaguesScore.ViewModels.Team;
 
