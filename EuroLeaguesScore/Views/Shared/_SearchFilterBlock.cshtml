@@ -1,0 +1,46 @@
+﻿<div class="card team-details-card shadow-lg border-0 mb-4">
+    <div class="card-body p-3">
+        <form method="get">
+            <div class="row g-3 align-items-end">
+
+                <div class="col-md-6">
+                    <label for="searchTerm" class="form-label text-light-emphasis fw-semibold small mb-1">
+                        <i class="bi bi-search me-1 text-success"></i>Search
+                    </label>
+                    <input id="searchTerm"
+                           name="searchTerm"
+                           value="@Context.Request.Query["searchTerm"]"
+                           class="form-control shadow-sm border-0"
+                           placeholder="Search players..." />
+                </div>
+
+                <div class="col-md-3">
+                    <label for="leagueId" class="form-label text-light-emphasis fw-semibold small mb-1">
+                        <i class="bi bi-trophy-fill me-1 text-success"></i>League
+                    </label>
+                    <select id="leagueId" name="leagueId" class="form-select shadow-sm border-0">
+                        <option value="">All Leagues</option>
+
+                        @foreach (var league in ViewBag.Leagues)
+                        {
+                            <option value="@league.Id" selected="@(Context.Request.Query["leagueId"] == league.Id.ToString())">
+                                @league.Name
+                            </option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="bi bi-search me-1"></i>Search
+                    </button>
+
+                    <a asp-action="All" class="btn btn-outline-light w-100">
+                        Clear
+                    </a>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
