@@ -7,10 +7,9 @@
 
     public class IdentitySeeder : IIdentitySeeder
     {
-        private readonly string[] DefaultRoles = new[]
+        public static string[] DefaultRoles = new[]
         {
             "Admin",
-            "Moderator",
             "User"
         };
 
