@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AllPlayersViewModel>
+﻿@model PlayerPaginationBlockViewModel
 
 @section Styles {
     <link rel="stylesheet" href="~/css/team.css" asp-append-version="true" />
@@ -25,7 +25,7 @@
 
     <div class="card team-card shadow-sm">
         <div class="card-body">
-            @if (!Model.Any())
+            @if (!Model.Players.Any())
             {
                 <p class="text-light mb-0 text-center">No players found.</p>
             }
@@ -43,7 +43,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var player in Model)
+                            @foreach (var player in Model.Players)
                             {
                                 <tr class="text-light">
                                     <td>
@@ -94,6 +94,18 @@
                         </tbody>
                     </table>
                 </div>
+
+                @await Html.PartialAsync("_PaginationBlock", new PaginationPartialViewModel
+                {
+                    Controller = "PlayerManagement",
+                        Action = "All",
+                        CurrentPage = Model.CurrentPage,
+                        TotalPages = Model.Pages,
+                        SearchTerm = Context.Request.Query["searchTerm"],
+                        LeagueId = string.IsNullOrWhiteSpace(Context.Request.Query["leagueId"])
+                        ? null
+                        : int.Parse(Context.Request.Query["leagueId"]!)
+                })
             }
         </div>
     </div>

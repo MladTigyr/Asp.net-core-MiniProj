@@ -1,0 +1,46 @@
+﻿@model PaginationPartialViewModel
+
+@if (Model.TotalPages > 1)
+{
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+
+            <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                <a class="page-link"
+                   asp-controller="@Model.Controller"
+                   asp-action="@Model.Action"
+                   asp-route-currentPage="@(Model.CurrentPage - 1)"
+                   asp-route-searchTerm="@Model.SearchTerm"
+                   asp-route-leagueId="@Model.LeagueId">
+                    Previous
+                </a>
+            </li>
+
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link"
+                       asp-controller="@Model.Controller"
+                       asp-action="@Model.Action"
+                       asp-route-currentPage="@i"
+                       asp-route-searchTerm="@Model.SearchTerm"
+                       asp-route-leagueId="@Model.LeagueId">
+                        @i
+                    </a>
+                </li>
+            }
+
+            <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                <a class="page-link"
+                   asp-controller="@Model.Controller"
+                   asp-action="@Model.Action"
+                   asp-route-currentPage="@(Model.CurrentPage + 1)"
+                   asp-route-searchTerm="@Model.SearchTerm"
+                   asp-route-leagueId="@Model.LeagueId">
+                    Next
+                </a>
+            </li>
+
+        </ul>
+    </nav>
+}

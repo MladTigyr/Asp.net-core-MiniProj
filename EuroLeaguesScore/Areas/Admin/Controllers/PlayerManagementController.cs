@@ -16,12 +16,12 @@ namespace EuroLeaguesScore.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All(int currentPage = 1)
         {
             string adminId = GetAdminUserId();
 
-            IEnumerable<AllPlayersViewModel> models = await playerService
-                .GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync(adminId);
+            PlayerPaginationBlockViewModel models = await playerService
+                .GetAllPlayersPaginated(adminId, null, 10, currentPage);
 
             return View(models);
         }
