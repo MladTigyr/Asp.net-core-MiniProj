@@ -30,12 +30,14 @@ namespace EuroLeaguesScore
             builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
             builder.Services.AddScoped<IFavouriteRepository, FavouriteRepository>();
             builder.Services.AddScoped<IUserPlayerRepository, UserPlayerRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
 
             builder.Services.AddScoped<ITeamService, TeamService>();
             builder.Services.AddScoped<IPlayerService, PlayerService>();
             builder.Services.AddScoped<ILeagueService, LeagueService>();
             builder.Services.AddScoped<IManagerService, ManagerService>();
             builder.Services.AddScoped<IFavouriteService, FavouriteService>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             builder.Services.AddTransient<IIdentitySeeder, IdentitySeeder>();
             builder.Services.AddTransient<IAdminSeeder, AdminSeeder>();
