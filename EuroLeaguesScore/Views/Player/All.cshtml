@@ -41,6 +41,14 @@
 </div>
 
 <div class="card team-details-card shadow-lg border-0">
+    @await Html.PartialAsync("_SearchBlock", new SearchBlockViewModel
+    {
+        Controller = "Player",
+        Action = "All",
+        SearchTerm = Context.Request.Query["searchTerm"],
+        Placeholder = "Search players..."
+    })
+
     <div class="card-body p-4">
         @if (Model != null && Model.Any())
         {

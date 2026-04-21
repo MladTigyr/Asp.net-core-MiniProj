@@ -31,6 +31,10 @@
 </div>
 
 <div class="row g-4">
+    @await Html.PartialAsync("_SearchFilterBlock", new FilterBlockViewModel
+    {
+        Leagues = ViewBag.Leagues
+    })
 
     @foreach (var team in Model)
     {
