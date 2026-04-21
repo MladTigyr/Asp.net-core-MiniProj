@@ -28,6 +28,7 @@
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Add()
         {
             AddTeamInputModel model = new AddTeamInputModel
@@ -40,7 +41,7 @@
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Add(AddTeamInputModel model)
         {
             model.Leagues = await teamService.GetLeaguesOrderedByLeagueNameAsync();
@@ -85,6 +86,7 @@
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id)
         {
             if (id <= 0)
@@ -104,7 +106,7 @@
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, EditTeamInputModel model)
         {
             if (id <= 0)
@@ -140,6 +142,7 @@
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             if (id <= 0)
@@ -158,7 +161,7 @@
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id, DeleteTeamViewModel model)
         {
             if (id <= 0)

@@ -18,9 +18,12 @@
 
     @if (User.Identity?.IsAuthenticated ?? false)
     {
-        <a asp-action="Add" class="btn btn-success">
-            <i class="bi bi-plus-circle me-1"></i>Add Manager
-        </a>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Add" class="btn btn-success">
+                <i class="bi bi-plus-circle me-1"></i>Add Manager
+            </a>
+        }
     }
 </div>
 
@@ -63,17 +66,20 @@
 
                                         @if (User.Identity?.IsAuthenticated ?? false)
                                         {
-                                            <a asp-action="Edit"
-                                               asp-route-id="@manager.Id"
-                                               class="btn btn-sm btn-success">
-                                                <i class="bi bi-pencil-square me-1"></i>Edit
-                                            </a>
+                                            @if (User.IsInRole("Admin"))
+                                            {
+                                                <a asp-action="Edit"
+                                                   asp-route-id="@manager.Id"
+                                                   class="btn btn-sm btn-success">
+                                                    <i class="bi bi-pencil-square me-1"></i>Edit
+                                                </a>
 
-                                            <a asp-action="Delete"
-                                               asp-route-id="@manager.Id"
-                                               class="btn btn-sm btn-outline-danger">
-                                                <i class="bi bi-trash me-1"></i>Delete
-                                            </a>
+                                                <a asp-action="Delete"
+                                                   asp-route-id="@manager.Id"
+                                                   class="btn btn-sm btn-outline-danger">
+                                                    <i class="bi bi-trash me-1"></i>Delete
+                                                </a>
+                                            }
                                         }
                                     </div>
                                 </td>
@@ -90,9 +96,12 @@
                 <p class="text-light-emphasis mt-3 mb-3">No managers have been added yet.</p>
                 @if (User.Identity?.IsAuthenticated ?? false)
                 {
-                    <a asp-action="Add" class="btn btn-success">
-                        <i class="bi bi-plus-circle me-1"></i>Add First Manager
-                    </a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Add" class="btn btn-success">
+                            <i class="bi bi-plus-circle me-1"></i>Add First Manager
+                        </a>
+                    }
                 }
             </div>
         }
