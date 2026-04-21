@@ -1,13 +1,12 @@
 ﻿namespace EuroLeaguesScore.Services.Core
 {
-    using System.Threading.Tasks;
-
     using EuroLeaguesScore.Data;
-    using EuroLeaguesScore.Services.Core.Contracts;
-    using EuroLeaguesScore.ViewModels.Team;
     using EuroLeaguesScore.Data.Models;
-    using EuroLeaguesScore.ViewModels.Player;
     using EuroLeaguesScore.Data.Repository.Contracts;
+    using EuroLeaguesScore.Services.Core.Contracts;
+    using EuroLeaguesScore.ViewModels.Player;
+    using EuroLeaguesScore.ViewModels.Team;
+    using System.Threading.Tasks;
 
     public class TeamService : ITeamService
     {
@@ -56,6 +55,7 @@
                     City = t.City,
                     Country = t.Country,
                     LeagueName = t.League.Name,
+                    LeagueId = t.League.Id,
                     Wins = t.Wins,
                     Losses = t.Losses,
                     Draws = t.Draws,
