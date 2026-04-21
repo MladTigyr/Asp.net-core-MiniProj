@@ -1,6 +1,5 @@
 ﻿namespace EuroLeaguesScore.Services.Core
 {
-    using EuroLeaguesScore.Data;
     using EuroLeaguesScore.Data.Models;
     using EuroLeaguesScore.Data.Repository.Contracts;
     using EuroLeaguesScore.Services.Core.Contracts;
@@ -17,7 +16,7 @@
         private readonly ILeagueRepository leagueRepository;
         private readonly IPlayerRepository playerRepository;
 
-        public TeamService(EuroLeaguesScoreDbContext dbContext, ITeamRepository teamRepository, IFavouriteRepository favouriteRepository, IManagerRepository managerRepository, ILeagueRepository leagueRepository, IPlayerRepository playerRepository)
+        public TeamService(ITeamRepository teamRepository, IFavouriteRepository favouriteRepository, IManagerRepository managerRepository, ILeagueRepository leagueRepository, IPlayerRepository playerRepository)
         {
             this.teamRepository = teamRepository;
             this.favouriteRepository = favouriteRepository;
