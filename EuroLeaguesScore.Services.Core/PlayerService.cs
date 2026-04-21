@@ -75,10 +75,10 @@ namespace EuroLeaguesScore.Services.Core
             return true;
         }
 
-        public async Task<IEnumerable<AllPlayersViewModel>> GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync(string? userId)
+        public async Task<IEnumerable<AllPlayersViewModel>> GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync(string? userId, string? searchTerm = null)
         {
             IEnumerable<Player> entityPlayers = await playerRepository
-                .GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync();
+                .GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync(searchTerm);
 
             IEnumerable<AllPlayersViewModel> models = entityPlayers
                 .Select(p => new AllPlayersViewModel

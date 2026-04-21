@@ -5,7 +5,7 @@
 
     public interface ITeamService
     {
-        Task<IEnumerable<AllTeamViewModel>> AllTeamsOrderedByLeagueNameThenByNameAsync(string? userId);
+        Task<IEnumerable<AllTeamViewModel>> AllTeamsOrderedByLeagueNameThenByNameAsync(string? userId, string? searchTerm = null, int? leagueId = null);
 
         Task<IEnumerable<ManagerViewModel>> GetManagersWhichHaveNotTeamToManageAsync();
 

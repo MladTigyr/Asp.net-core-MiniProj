@@ -4,7 +4,7 @@
 
     public interface ITeamRepository : IRepository<Team, int>
     {
-        Task<IEnumerable<Team>> AllTeamsOrderedByLeagueNameThenByNameAsync();
+        Task<IEnumerable<Team>> AllTeamsOrderedByLeagueNameThenByNameAsync(string? searchTerm = null, int? leagueId = null);
 
         Task<Team?> GetTeamByIdWithItsIncludesAsync(int id);
 

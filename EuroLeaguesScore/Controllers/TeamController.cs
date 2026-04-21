@@ -9,20 +9,25 @@
     public class TeamController : BaseController
     {
         private readonly ITeamService teamService;
+        private readonly ILeagueService leagueService;
 
-        public TeamController(ITeamService teamService)
+        public TeamController(ITeamService teamService, ILeagueService leagueService    )
         {
             this.teamService = teamService;
+            this.leagueService = leagueService;
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All([FromQuery] string? searchTerm, [FromQuery] int? leagueId)
         {
             string? userId = GetUser();
 
             IEnumerable<AllTeamViewModel> teams = await teamService
-                .AllTeamsOrderedByLeagueNameThenByNameAsync(userId);
+                .AllTeamsOrderedByLeagueNameThenByNameAsync(userId, searchTerm, leagueId);
+
+            ViewBag.Leagues = await leagueService
+                .GetAllLeagueViewModelsOrderedByLeagueNameAsync();
 
             return View(teams);
         }

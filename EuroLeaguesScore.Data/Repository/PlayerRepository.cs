@@ -16,8 +16,23 @@ namespace EuroLeaguesScore.Data.Repository
         {
         }
 
-        public async Task<IEnumerable<Player>> GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync()
+        public async Task<IEnumerable<Player>> GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync(string? searchTerm)
         {
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                string input = searchTerm.ToLowerInvariant().Trim();
+
+                return await this.GetAllAttached()
+                .AsNoTracking()
+                .Include(p => p.Team)
+                .ThenInclude(p => p.League)
+                .Where(p => p.Name.ToLower().Contains(input))
+                .OrderBy(p => p.Team.League.Name)
+                .ThenBy(p => p.Team.Name)
+                .ThenBy(p => p.Name)
+                .ToArrayAsync();
+            }
+
             return await this.GetAllAttached()
                 .AsNoTracking()
                 .Include(p => p.Team)

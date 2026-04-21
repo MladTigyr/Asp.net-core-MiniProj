@@ -42,10 +42,10 @@
             await teamRepository.AddAsync(team);
         }
 
-        public async Task<IEnumerable<AllTeamViewModel>> AllTeamsOrderedByLeagueNameThenByNameAsync(string? userId)
+        public async Task<IEnumerable<AllTeamViewModel>> AllTeamsOrderedByLeagueNameThenByNameAsync(string? userId, string? searchTerm = null, int? leagueId = null)
         {
             IEnumerable<Team> entityTeams = await teamRepository
-                .AllTeamsOrderedByLeagueNameThenByNameAsync();
+                .AllTeamsOrderedByLeagueNameThenByNameAsync(searchTerm, leagueId);
 
             IEnumerable<AllTeamViewModel> models = entityTeams
                 .Select(t => new AllTeamViewModel

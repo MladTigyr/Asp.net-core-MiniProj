@@ -6,7 +6,7 @@ namespace EuroLeaguesScore.Services.Core.Contracts
 
     public interface IPlayerService
     {
-        Task<IEnumerable<AllPlayersViewModel>> GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync(string? userId);
+        Task<IEnumerable<AllPlayersViewModel>> GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync(string? userId, string? searchTerm = null);
 
         Task<DetailsPlayerViewModel?> GetDetailsPlayerViewModelAsync(int playerId, string userId);
 

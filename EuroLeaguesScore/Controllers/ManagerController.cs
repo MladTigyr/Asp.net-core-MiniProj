@@ -18,10 +18,10 @@
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All([FromQuery] string? searchTerm)
         {
             IEnumerable<AllManagerViewModel> models = await managerService
-                .GetAllManagersWithTheirTeamIfTheyHaveAsync();
+                .GetAllManagersWithTheirTeamIfTheyHaveAsync(searchTerm);
 
             return View(models);
         }

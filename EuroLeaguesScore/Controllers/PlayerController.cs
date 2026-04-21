@@ -20,12 +20,12 @@
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All([FromQuery] string? searchTerm)
         {
             string userId = GetUser();
 
             IEnumerable<AllPlayersViewModel> model = await playerService
-                .GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync(userId);
+                .GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync(userId, searchTerm);
 
             return View(model);
         }

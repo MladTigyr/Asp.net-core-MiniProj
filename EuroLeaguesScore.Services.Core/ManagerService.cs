@@ -81,10 +81,10 @@
             return true;
         }
 
-        public async Task<IEnumerable<AllManagerViewModel>> GetAllManagersWithTheirTeamIfTheyHaveAsync()
+        public async Task<IEnumerable<AllManagerViewModel>> GetAllManagersWithTheirTeamIfTheyHaveAsync(string? searchTerm = null)
         {
             IEnumerable<Manager> entityManagers = await managerRepository
-                .GetAllManagersWithTheirTeamAsync();
+                .GetAllManagersWithTheirTeamAsync(searchTerm);
 
             IEnumerable<AllManagerViewModel> models = entityManagers
                 .Select(m => new AllManagerViewModel
