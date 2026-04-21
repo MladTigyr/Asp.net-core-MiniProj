@@ -1,30 +1,40 @@
 ﻿namespace EuroLeaguesScore.Controllers
 {
-    using Microsoft.AspNetCore.Mvc;
-    using EuroLeaguesScore.ViewModels.Team;
-    using static GCommon.ViewModelsMessages;
     using EuroLeaguesScore.Services.Core.Contracts;
+    using EuroLeaguesScore.ViewModels.Shared;
+    using EuroLeaguesScore.ViewModels.Team;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using System.Security.Claims;
+    using static GCommon.ViewModelsMessages;
 
     public class TeamController : BaseController
     {
         private readonly ITeamService teamService;
+        private readonly ILeagueService leagueService;
 
-        public TeamController(ITeamService teamService)
+        public TeamController(ITeamService teamService, ILeagueService leagueService    )
         {
             this.teamService = teamService;
+            this.leagueService = leagueService;
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All([FromQuery] string? searchTerm, [FromQuery] int? leagueId, int currentPage = 1)
         {
-            string? userId = GetUser();
+            int elementsPerPage = 12;
 
-            IEnumerable<AllTeamViewModel> teams = await teamService
-                .AllTeamsOrderedByLeagueNameThenByNameAsync(userId);
+            TeamPaginationBlockViewModel model = await teamService.GetAllTeamsPaginated(
+                User.FindFirstValue(ClaimTypes.NameIdentifier),
+                searchTerm,
+                leagueId,
+                elementsPerPage,
+                currentPage);
 
-            return View(teams);
+            ViewBag.Leagues = await leagueService.GetAllLeagueViewModelsOrderedByLeagueNameAsync();
+
+            return View(model);
         }
 
         [HttpGet]

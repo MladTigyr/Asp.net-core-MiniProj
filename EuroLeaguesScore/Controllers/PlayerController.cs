@@ -20,12 +20,14 @@
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All([FromQuery] string? searchTerm, int currentPage = 1)
         {
             string userId = GetUser();
 
-            IEnumerable<AllPlayersViewModel> model = await playerService
-                .GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync(userId);
+            int elementsPerPage = 10;
+
+            PlayerPaginationBlockViewModel model = await playerService
+                .GetAllPlayersPaginated(userId, searchTerm, elementsPerPage, currentPage);
 
             return View(model);
         }

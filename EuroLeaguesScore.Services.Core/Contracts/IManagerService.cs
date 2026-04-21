@@ -5,7 +5,7 @@
 
     public interface IManagerService
     {
-        Task<IEnumerable<AllManagerViewModel>> GetAllManagersWithTheirTeamIfTheyHaveAsync();
+        Task<IEnumerable<AllManagerViewModel>> GetAllManagersWithTheirTeamIfTheyHaveAsync(string? searchTerm = null);
 
         Task<IEnumerable<TeamInputModel>> GetTeamInputModelAsync();
 

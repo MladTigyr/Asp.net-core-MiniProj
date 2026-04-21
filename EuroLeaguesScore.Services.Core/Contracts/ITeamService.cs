@@ -1,11 +1,12 @@
 ﻿namespace EuroLeaguesScore.Services.Core.Contracts
 {
     using EuroLeaguesScore.ViewModels.Player;
+    using EuroLeaguesScore.ViewModels.Shared;
     using EuroLeaguesScore.ViewModels.Team;
 
     public interface ITeamService
     {
-        Task<IEnumerable<AllTeamViewModel>> AllTeamsOrderedByLeagueNameThenByNameAsync(string? userId);
+        Task<IEnumerable<AllTeamViewModel>> AllTeamsOrderedByLeagueNameThenByNameAsync(string? userId, string? searchTerm = null, int? leagueId = null);
 
         Task<IEnumerable<ManagerViewModel>> GetManagersWhichHaveNotTeamToManageAsync();
 
@@ -26,5 +27,7 @@
         Task<DeleteTeamViewModel?> GetDeleteTeamViewModelAsync(int teamId);
 
         Task<bool> DeleteTeamFromDbAsync(int teamId, DeleteTeamViewModel model);
+
+        Task<TeamPaginationBlockViewModel> GetAllTeamsPaginated(string userId, string? searchTerm, int? leagueId, int elementsPerPage, int currentPage);
     }
 }

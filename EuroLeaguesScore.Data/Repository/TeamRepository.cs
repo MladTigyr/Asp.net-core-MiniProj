@@ -17,12 +17,25 @@
             this.context = dbContext;
         }
 
-        public async Task<IEnumerable<Team>> AllTeamsOrderedByLeagueNameThenByNameAsync()
+        public async Task<IEnumerable<Team>> AllTeamsOrderedByLeagueNameThenByNameAsync(string? searchTerm = null, int? leagueId = null)
         {
-            return await this.GetAllAttached()
+            IQueryable<Team> teams = this.GetAllAttached()
                 .AsNoTracking()
                 .Include(t => t.League)
-                .Include(t => t.Manager)
+                .Include(t => t.Manager);
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                string input = searchTerm.ToLowerInvariant().Trim();
+                teams = teams.Where(t => t.Name.ToLower().Contains(input));
+            }
+
+            if (leagueId.HasValue)
+            {
+                teams = teams.Where(t => t.League.Id == leagueId.Value);
+            }
+
+            return await teams
                 .OrderBy(t => t.League.Name)
                 .ThenBy(t => t.Name)
                 .ToArrayAsync();

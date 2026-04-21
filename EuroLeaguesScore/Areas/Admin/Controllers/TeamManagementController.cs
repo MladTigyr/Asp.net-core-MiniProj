@@ -5,6 +5,7 @@ namespace EuroLeaguesScore.Areas.Admin.Controllers
 
     using EuroLeaguesScore.Services.Core.Contracts;
     using EuroLeaguesScore.ViewModels.Team;
+    using EuroLeaguesScore.ViewModels.Shared;
 
     public class TeamManagementController : BaseController
     {
@@ -15,12 +16,12 @@ namespace EuroLeaguesScore.Areas.Admin.Controllers
             this.teamService = teamService;
         }
 
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All(int currentPage = 1)
         {
             string adminId = GetAdminUserId();
 
-            IEnumerable<AllTeamViewModel> models = await teamService
-                .AllTeamsOrderedByLeagueNameThenByNameAsync(adminId);
+            TeamPaginationBlockViewModel models = await teamService
+                .GetAllTeamsPaginated(adminId, null, null, 10, currentPage);
 
             return View(models);
         }

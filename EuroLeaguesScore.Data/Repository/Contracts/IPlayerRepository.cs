@@ -6,7 +6,7 @@
     {
         Task<IEnumerable<Player>> GetDetailsPlayersOrderedByNameWithTeamIdAsync(int teamId);
 
-        Task<IEnumerable<Player>> GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync();
+        Task<IEnumerable<Player>> GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync(string? searchTerm = null);
 
         Task<Player?> GetPlayerWithHisTeamIfExistsAsync(int id);
     }

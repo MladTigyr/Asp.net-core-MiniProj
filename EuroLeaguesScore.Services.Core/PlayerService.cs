@@ -1,12 +1,13 @@
 ﻿
 namespace EuroLeaguesScore.Services.Core
 {
-    using System.Threading.Tasks;
-
     using EuroLeaguesScore.Data.Models;
     using EuroLeaguesScore.Data.Repository.Contracts;
     using EuroLeaguesScore.Services.Core.Contracts;
     using EuroLeaguesScore.ViewModels.Player;
+    using EuroLeaguesScore.ViewModels.Shared;
+    using EuroLeaguesScore.ViewModels.Team;
+    using System.Threading.Tasks;
 
     public class PlayerService : IPlayerService
     {
@@ -75,10 +76,10 @@ namespace EuroLeaguesScore.Services.Core
             return true;
         }
 
-        public async Task<IEnumerable<AllPlayersViewModel>> GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync(string? userId)
+        public async Task<IEnumerable<AllPlayersViewModel>> GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync(string? userId, string? searchTerm, int elementsPerPage, int currentPage)
         {
             IEnumerable<Player> entityPlayers = await playerRepository
-                .GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync();
+                .GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync(searchTerm);
 
             IEnumerable<AllPlayersViewModel> models = entityPlayers
                 .Select(p => new AllPlayersViewModel
@@ -114,6 +115,30 @@ namespace EuroLeaguesScore.Services.Core
             }
 
             return models;
+        }
+
+        public async Task<PlayerPaginationBlockViewModel> GetAllPlayersPaginated(string? userId, string? searchTerm, int elementsPerPage, int currentPage)
+        {
+            IEnumerable<AllPlayersViewModel> models =
+                await GetAllPlayersOrderedByLeagueThenByTeamNameThenByNameAsync(userId, searchTerm, elementsPerPage, currentPage);
+
+            int totalCount = models.Count();
+
+            List<AllPlayersViewModel> playersModels = models
+                .Skip((currentPage - 1) * elementsPerPage)
+                .Take(elementsPerPage)
+                .ToList();
+
+            PlayerPaginationBlockViewModel pagination = new PlayerPaginationBlockViewModel
+            {
+                Players = playersModels,
+                CurrentPage = currentPage,
+                ElementsPerPage = elementsPerPage,
+                TotalCount = totalCount,
+                Pages = (int)Math.Ceiling((double)totalCount / elementsPerPage)
+            };
+
+            return pagination;
         }
 
         public async Task<IEnumerable<TeamViewModel>> GetAllTeamsAsync()

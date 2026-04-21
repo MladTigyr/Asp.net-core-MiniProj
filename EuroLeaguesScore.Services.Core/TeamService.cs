@@ -5,6 +5,7 @@
     using EuroLeaguesScore.Data.Repository.Contracts;
     using EuroLeaguesScore.Services.Core.Contracts;
     using EuroLeaguesScore.ViewModels.Player;
+    using EuroLeaguesScore.ViewModels.Shared;
     using EuroLeaguesScore.ViewModels.Team;
     using System.Threading.Tasks;
 
@@ -42,10 +43,10 @@
             await teamRepository.AddAsync(team);
         }
 
-        public async Task<IEnumerable<AllTeamViewModel>> AllTeamsOrderedByLeagueNameThenByNameAsync(string? userId)
+        public async Task<IEnumerable<AllTeamViewModel>> AllTeamsOrderedByLeagueNameThenByNameAsync(string? userId, string? searchTerm = null, int? leagueId = null)
         {
             IEnumerable<Team> entityTeams = await teamRepository
-                .AllTeamsOrderedByLeagueNameThenByNameAsync();
+                .AllTeamsOrderedByLeagueNameThenByNameAsync(searchTerm, leagueId);
 
             IEnumerable<AllTeamViewModel> models = entityTeams
                 .Select(t => new AllTeamViewModel
@@ -118,6 +119,30 @@
             await teamRepository.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<TeamPaginationBlockViewModel> GetAllTeamsPaginated(string userId, string? searchTerm, int? leagueId, int elementsPerPage, int currentPage)
+        {
+            IEnumerable<AllTeamViewModel> models =
+                await AllTeamsOrderedByLeagueNameThenByNameAsync(userId, searchTerm, leagueId);
+
+            int totalCount = models.Count();
+
+            List<AllTeamViewModel> teamsForPage = models
+                .Skip((currentPage - 1) * elementsPerPage)
+                .Take(elementsPerPage)
+                .ToList();
+
+            TeamPaginationBlockViewModel pagination = new TeamPaginationBlockViewModel
+            {
+                Teams = teamsForPage,
+                CurrentPage = currentPage,
+                ElementsPerPage = elementsPerPage,
+                TotalCount = totalCount,
+                Pages = (int)Math.Ceiling((double)totalCount / elementsPerPage)
+            };
+
+            return pagination;
         }
 
         public async Task<DeleteTeamViewModel?> GetDeleteTeamViewModelAsync(int teamId)
